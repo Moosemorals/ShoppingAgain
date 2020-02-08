@@ -1,0 +1,16 @@
+﻿
+dl {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+dt {
+    flex-basis: 20%;
+    padding: var(--small-padding);
+    font-weight: bold;
+}
+dd {
+    flex-basis: 70%;
+    flex-grow: 1;
+    padding: var(--small-padding);
+}

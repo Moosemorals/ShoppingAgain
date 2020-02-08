@@ -1,0 +1,37 @@
+﻿/*! Local styles */
+
+html {
+    box-sizing: border-box;
+    --foreground-color: #faebd7;
+    --background-color: #111;
+    --medium-color: hsl(0, 0, 50%);
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+body {
+    background: var(--background-color);
+    color: var(--foreground-color);
+    display: flex;
+    flex-flow: column nowrap;
+    font-family: "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+    font-size: 16px;
+    line-height: 1.2;
+    margin: 1em;
+    --small-padding: 0.2em;
+    --large-padding: 1.2em;
+}
+ 
+a {
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    text-decoration: underline;
+}
+
+#page-controls {
+    margin-left: var(--large-padding);
+}

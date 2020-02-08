@@ -1,0 +1,37 @@
+﻿
+table {
+    width: 100%;
+    border-collapse: collapse;
+    --cell-border: 1px dotted var(--foreground-color);
+}
+
+th {
+    padding: var(--small-padding);
+}
+
+tbody {
+    border-top: 2px solid var(--foreground-color);
+}
+
+tr {
+    border-bottom: var(--cell-border);
+}
+
+td {
+    border-left: var(--cell-border) ;
+    border-right: var(--cell-border);
+    padding: var(--small-padding);
+}
+
+td:first-of-type {
+    border-left: none;
+}
+
+td:last-of-type {
+    border-right: none;
+}
+
+.text-left {
+    text-align: left;
+}
+

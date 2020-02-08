@@ -10,9 +10,9 @@
     <table>
         <thead>
             <tr>
-                <th>@Html.DisplayNameFor(x => x.Name)</th>
-                <th>@Html.DisplayNameFor(x => x.Count)</th>
-                <th>Actions</th>
+                <th class="text-left">@Html.DisplayNameFor(x => x.Name)</th>
+                <th class="text-left">@Html.DisplayNameFor(x => x.Count)</th>
+                <th class="text-left">Actions</th>
             </tr>
         </thead>
         <tbody id="listItems">
@@ -22,9 +22,9 @@
                     <td>@Html.DisplayFor(x => list.Name)</td>
                     <td>@Html.DisplayFor(x => list.Count)</td>
                     <td>
-                        <a href="@Url.Action("Details", new { id = list.ID })">Details</a>
-                        <a href="@Url.Action("Edit", new { id = list.ID })">Edit</a>
-                        <a href="@Url.Action("Delete", new { id = list.ID })">Delete</a>
+                        <a class="btn" href="@Url.Action("Details", new { id = list.ID })">Details</a> |
+                        <a class="btn" href="@Url.Action("Edit", new { id = list.ID })">Edit</a> |
+                        <a class="btn" href="@Url.Action("Delete", new { id = list.ID })">Delete</a>
                     </td>
                 </tr>
             }

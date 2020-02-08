@@ -8,14 +8,17 @@
 @using (Html.BeginForm())
 {
     @Html.HiddenFor(x => x.ID)
-    <div>
-        @Html.LabelFor(x => x.Name)
-        @Html.EditorFor(x => x.Name)
-        @Html.ValidationMessageFor(x => x.Name)
-    </div>
+    <dl>
+        <dt>@Html.LabelFor(x => x.Name)</dt>
+        <dd>
+            @Html.EditorFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
+        </dd>
 
-    <div>
-        <button type="submit">Update List</button>
-        <a href="@Url.Action("index")">Cancel</a>
+    </dl>
+
+    <div id="page-controls">
+        <button class="btn" type="submit">Save Changes</button>
+        <a class="btn" href="@Url.Action("index")">Cancel</a>
     </div>
 }

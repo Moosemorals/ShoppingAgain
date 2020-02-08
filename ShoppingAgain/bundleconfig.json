@@ -1,0 +1,22 @@
+[
+  {
+    "outputFileName": "wwwroot/styles/site.css",
+    "inputFiles": [
+      "Static/normalize.css",
+      "Static/general.css",
+      "Static/form.css",
+      "Static/lists.css",
+      "Static/tables.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "commentMode": "important"
+    }
+  },
+  {
+    "outputFileName": "wwwroot/styles/site.min.min.css",
+    "inputFiles": [
+      "wwwroot/styles/site.min.css"
+    ]
+  }
+]

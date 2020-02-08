@@ -12,6 +12,7 @@ namespace ShoppingAgain.Contexts
     {
 
         public DbSet<ShoppingList> ShoppingLists { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -21,6 +22,12 @@ namespace ShoppingAgain.Contexts
             };
 
             optionsBuilder.UseSqlite(new SqliteConnection(connectionStringBuilder.ToString()));
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ShoppingList>().ToTable("ShoppingLists");
+            modelBuilder.Entity<Item>().ToTable("Items");
         }
     }
 }

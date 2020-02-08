@@ -11,26 +11,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@_title</title>
-    <link rel="icon" type="image/svg" href="~/images/icon.svg">
+    <link rel="icon" type="image/svg" href="~/images/icon.svg" />
+    <link rel="stylesheet" type="text/css" href="~/styles/site.min.css" />
 </head>
 <body>
     <nav id="main-controls">
         @RenderSection("controls", false)
     </nav>
 
-    <h1>@_title</h1>
+    <section id="title">
+        <h1>@_title</h1>
+    </section>
 
     @if (TempData.ContainsKey(StaticNames.Message))
     {
+        <section id="message">
         <div>
             @TempData[StaticNames.Message]
         </div>
-    }
+ 
+        </section>
+   } 
 
-
-    <article>
+    <main>
         @RenderBody()
-    </article>
+    </main>
 
     @RenderSection("scripts", false)
 </body>
