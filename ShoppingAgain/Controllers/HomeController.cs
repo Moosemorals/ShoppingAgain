@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ShoppingAgain.Classes;
 using ShoppingAgain.Models;
 using ShoppingAgain.Services;
 
@@ -63,6 +64,8 @@ namespace ShoppingAgain
                     return RedirectToAction("Index");
                 }
 
+                list.Name = fromUser.Name;
+
                 lists.Update(list);
                 Message("The list '{0}' has been updated", list.Name);
                 return RedirectToAction("Details", new { id = list.ID });
@@ -83,7 +86,7 @@ namespace ShoppingAgain
 
         private void Message(string format, params object[] args)
         {
-            TempData.Add("message", string.Format(format, args));
+            TempData.Add(StaticNames.Message, string.Format(format, args));
         }
     }
 }

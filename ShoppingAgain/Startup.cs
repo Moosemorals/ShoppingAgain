@@ -26,13 +26,16 @@ namespace ShoppingAgain
         {
             Configuration = configuration;
             this.env = env;
-        }
 
+            using var db = new ShoppingContext();
+            db.Database.EnsureCreated();
+            db.Database.Migrate(); 
+        } 
 
         public void ConfigureServices(IServiceCollection services)
-        { 
+        {
             // Setup DI
-            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>)); 
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddScoped<ShoppingContext>();
             services.AddScoped<ShoppingService>();
 
@@ -49,7 +52,7 @@ namespace ShoppingAgain
 
         public void Configure(IApplicationBuilder app)
         {
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -65,7 +68,7 @@ namespace ShoppingAgain
             // Serve static files from wwwroot
             app.UseStaticFiles();
 
-            
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
@@ -74,19 +77,6 @@ namespace ShoppingAgain
                         name: "default",
                         pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-        }
-
-        public Startup(IWebHostEnvironment env)
-        {
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            using (var db = new ShoppingContext())
-            {
-                db.Database.EnsureCreated();
-                db.Database.Migrate();
-            }
         }
     }
 }

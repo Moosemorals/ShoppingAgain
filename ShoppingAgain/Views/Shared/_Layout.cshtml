@@ -1,4 +1,4 @@
-﻿
+﻿@using ShoppingAgain.Classes
 @{
     Layout = null;
 
@@ -18,14 +18,15 @@
         @RenderSection("controls", false)
     </nav>
 
-    @if (TempData.ContainsKey("messaage"))
+    <h1>@_title</h1>
+
+    @if (TempData.ContainsKey(StaticNames.Message))
     {
         <div>
-            @TempData["message"]
+            @TempData[StaticNames.Message]
         </div>
     }
 
-    <h1>@_title</h1>
 
     <article>
         @RenderBody()
