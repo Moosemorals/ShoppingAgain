@@ -40,7 +40,7 @@ namespace ShoppingAgain
             services.AddScoped<ShoppingService>();
 
             // Setup MVC
-            IMvcBuilder builder = services.AddMvc();
+            IMvcBuilder builder = services.AddMvc(options => options.EnableEndpointRouting = false);
             if (env.IsDevelopment())
             {
                 builder.AddRazorRuntimeCompilation();
@@ -68,15 +68,7 @@ namespace ShoppingAgain
             // Serve static files from wwwroot
             app.UseStaticFiles();
 
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=Home}/{action=Index}/{id?}");
-            });
+            app.UseMvc();
         }
     }
 }

@@ -1,0 +1,23 @@
+﻿@model ShoppingAgain.Models.Item
+
+@{
+    ViewData["Title"] = "New item for shopping list";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@using (Html.BeginForm())
+{
+    <dl>
+        <dt>@Html.LabelFor(x => x.Name)</dt>
+        <dd>
+            @Html.EditorFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
+        </dd>
+    </dl>
+
+    <div>
+        <button type="submit">Add Item</button>
+        <a href="@Url.RouteUrl("ListIndex")">Cancel</a>
+    </div>
+}

@@ -1,4 +1,5 @@
-﻿using ShoppingAgain.Contexts;
+﻿using Microsoft.EntityFrameworkCore;
+using ShoppingAgain.Contexts;
 using ShoppingAgain.Models;
 using System;
 using System.Collections.Generic;
@@ -18,17 +19,24 @@ namespace ShoppingAgain.Services
 
         public IEnumerable<ShoppingList> GetAll()
         {
-            return _db.ShoppingLists.Where(x => true);
+            return _db.ShoppingLists
+                .Include(x => x.Items)
+                .Where(x => true);
         }
 
         public ShoppingList Get(long id)
         {
-            return _db.ShoppingLists.FirstOrDefault(x => x.ID == id);
+            return _db.ShoppingLists
+                .Include(x => x.Items)
+                .FirstOrDefault(x => x.ID == id);
+                
         }
 
         public ShoppingList Get(string name)
         {
-            return _db.ShoppingLists.FirstOrDefault(x => x.Name == name);
+            return _db.ShoppingLists
+                .Include(x => x.Items)
+                .FirstOrDefault(x => x.Name == name);
         }
 
         public ShoppingList Add(ShoppingList list)
@@ -47,6 +55,12 @@ namespace ShoppingAgain.Services
         public void Update(ShoppingList list)
         {
             _db.ShoppingLists.Update(list);
+            _db.SaveChanges();
+        }
+
+        internal void Delete(ShoppingList list)
+        {
+            _db.ShoppingLists.Remove(list);
             _db.SaveChanges();
         }
     }

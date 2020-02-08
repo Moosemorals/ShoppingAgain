@@ -1,17 +1,19 @@
 ﻿@using  ShoppingAgain.Models
 @model ShoppingList
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create New Shopping List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @using (Html.BeginForm())
 {
-    <div>
-        @Html.LabelFor(x => x.Name)
-        @Html.EditorFor(x => x.Name)
-        @Html.ValidationMessageFor(x => x.Name)
-    </div>
+    <dl>
+        <dt>@Html.LabelFor(x => x.Name)</dt>
+        <dd>
+            @Html.EditorFor(x => x.Name)
+            @Html.ValidationMessageFor(x => x.Name)
+        </dd>
+    </dl>
 
     <div>
         <button type="submit">Create List</button>
