@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Static\basket.svg" />
+    <None Remove="Static\bought.svg" />
+    <None Remove="Static\icon.svg" />
+    <None Remove="Static\icon_notification.svg" />
+    <None Remove="Static\lock.svg" />
+    <None Remove="Static\wanted.svg" />
     <None Remove="Static\words.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Static\words.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +20,39 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Static\" />
+    <Folder Include="wwwroot\styles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\scripts\shopping.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\data\words.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\basket.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\bought.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\icon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\icon_notification.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\lock.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\images\wanted.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

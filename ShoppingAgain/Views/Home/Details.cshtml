@@ -1,0 +1,45 @@
+﻿@using ShoppingAgain.Models
+@model ShoppingList
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <h4>ShoppingList</h4>
+    <hr />
+    <dl class="row">
+       <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd >
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            Contents
+        </dt>
+        <dd>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Status</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (Item i in Model.Items)
+                    {
+                        <tr>
+                            <td> @Html.DisplayFor(x => i.Name) </td>
+                            <td> @Html.DisplayFor(x => i.State)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </dd> 
+     </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    <a href="@Url.Action("Index")">Back to List</a>
+</div>

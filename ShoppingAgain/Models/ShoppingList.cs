@@ -8,10 +8,17 @@ namespace ShoppingAgain.Models
 {
     public class ShoppingList
     {
+        public ShoppingList() => Items = new List<Item>();
+
         [Key]
         public int ID { get; set; }
 
         [Required]
         public string Name { get; set; }
+
+        public virtual ICollection<Item> Items { get; set; }
+
+        [Display(Name = "Items")]
+        public int Count {  get { return Items.Count; } }
     }
 }

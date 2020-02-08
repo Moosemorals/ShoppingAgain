@@ -49,11 +49,23 @@ namespace ShoppingAgain
 
         public void Configure(IApplicationBuilder app)
         {
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
+            // Add CSP header
+            app.Use(async (ctx, next) =>
+            {
+                ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; ");
+                await next();
+            });
+
+            // Serve static files from wwwroot
+            app.UseStaticFiles();
+
+            
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

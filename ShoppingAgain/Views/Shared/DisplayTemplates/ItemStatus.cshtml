@@ -1,0 +1,18 @@
+﻿@using ShoppingAgain.Models
+@model ItemState
+
+@switch (Model)
+{
+    case ItemState.Basket:
+        <img src="~/images/basket.svg" alt="In Basket" width="32" height="32" />
+        break;
+    case ItemState.Bought:
+         <img src="~/images/bought.svg" alt="Bought" width="32" height="32" />
+        break;
+    case ItemState.Wanted:
+        <img src="~/images/wanted.svg" alt="Wanted" width="32" height="32" />
+        break;
+    default:
+        <span>Unknown state</span>
+        break;
+}

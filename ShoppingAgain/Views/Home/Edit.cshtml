@@ -1,0 +1,21 @@
+﻿@using  ShoppingAgain.Models
+@model ShoppingList
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(x => x.ID)
+    <div>
+        @Html.LabelFor(x => x.Name)
+        @Html.EditorFor(x => x.Name)
+        @Html.ValidationMessageFor(x => x.Name)
+    </div>
+
+    <div>
+        <button type="submit">Update List</button>
+        <a href="@Url.Action("index")">Cancel</a>
+    </div>
+}

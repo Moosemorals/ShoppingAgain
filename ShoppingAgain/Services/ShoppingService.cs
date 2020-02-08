@@ -43,5 +43,11 @@ namespace ShoppingAgain.Services
         {
             return _db.ShoppingLists.Any(l => l.Name == name);
         }
+
+        public void Update(ShoppingList list)
+        {
+            _db.ShoppingLists.Update(list);
+            _db.SaveChanges();
+        }
     }
 }

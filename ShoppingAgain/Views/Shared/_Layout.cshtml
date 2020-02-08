@@ -6,15 +6,24 @@
 }
 <!DOCTYPE html>
 
-<html>
+<html lang="en-gb">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@_title</title>
+    <link rel="icon" type="image/svg" href="~/images/icon.svg">
 </head>
 <body>
     <nav id="main-controls">
         @RenderSection("controls", false)
     </nav>
+
+    @if (TempData.ContainsKey("messaage"))
+    {
+        <div>
+            @TempData["message"]
+        </div>
+    }
 
     <h1>@_title</h1>
 
