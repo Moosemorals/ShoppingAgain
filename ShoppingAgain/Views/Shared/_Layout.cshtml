@@ -1,0 +1,27 @@
+﻿
+@{
+    Layout = null;
+
+    string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@_title</title>
+</head>
+<body>
+    <nav id="main-controls">
+        @RenderSection("controls", false)
+    </nav>
+
+    <h1>@_title</h1>
+
+    <article>
+        @RenderBody()
+    </article>
+
+    @RenderSection("scripts", false)
+</body>
+</html>

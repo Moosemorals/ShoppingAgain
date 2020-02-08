@@ -1,22 +1,8 @@
 ﻿
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.title = "Your Shopping Lists";
 }
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
-    <h1>Shopping List: <span id="name"></span></h1>
-
-    <nav id="list-controls">
-        <button id="cmd-item-new">New Item</button>
-    </nav>
-
     <table>
         <thead>
             <tr>
@@ -28,7 +14,3 @@
         <tbody id="listItems">
         </tbody>
     </table>
-
-    <script type="module" src="~/Scripts/shopping.js"></script>
-</body>
-</html>

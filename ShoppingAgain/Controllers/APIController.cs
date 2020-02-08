@@ -56,7 +56,7 @@ namespace ShoppingAgain.Controllers
             return NotFound();
         }
 
-        [Route("{name:string}", Name = "GetByName")]
+        [Route("{name}", Name = "GetByName")]
         [Produces(typeof(ShoppingList))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

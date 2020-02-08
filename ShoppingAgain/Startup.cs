@@ -17,24 +17,37 @@ namespace ShoppingAgain
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+
+        public IConfiguration Configuration { get; }
+
+        public IWebHostEnvironment env { get; }
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
+            Configuration = configuration;
+            this.env = env;
+        }
 
-            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
+        public void ConfigureServices(IServiceCollection services)
+        { 
+            // Setup DI
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>)); 
             services.AddScoped<ShoppingContext>();
             services.AddScoped<ShoppingService>();
 
-            services.AddMvc();
+            // Setup MVC
+            IMvcBuilder builder = services.AddMvc();
+            if (env.IsDevelopment())
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
 
-            services.AddEntityFrameworkSqlite()
-                .AddDbContext<ShoppingContext>();
+            // Setup Database
+            services.AddEntityFrameworkSqlite().AddDbContext<ShoppingContext>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             if (env.IsDevelopment())
             {
