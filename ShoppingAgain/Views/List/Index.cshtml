@@ -7,6 +7,9 @@
 
 @if (Model.Count() > 0)
 {
+        
+    <p><a href="@Url.RouteUrl("ListCreate")">Create List</a></p>
+
     <table>
         <thead>
             <tr>
@@ -22,9 +25,9 @@
                     <td>@Html.DisplayFor(x => list.Name)</td>
                     <td>@Html.DisplayFor(x => list.Count)</td>
                     <td>
-                        <a class="btn" href="@Url.Action("Details", new { id = list.ID })">Details</a> |
-                        <a class="btn" href="@Url.Action("Edit", new { id = list.ID })">Edit</a> |
-                        <a class="btn" href="@Url.Action("Delete", new { id = list.ID })">Delete</a>
+                        <a class="btn" href="@Url.RouteUrl("ListDetails", new { id = list.ID })">Details</a> |
+                        <a class="btn" href="@Url.RouteUrl("ListEdit", new { id = list.ID })">Edit</a> |
+                        <a class="btn" href="@Url.RouteUrl("ListDelete", new { id = list.ID })">Delete</a>
                     </td>
                 </tr>
             }
@@ -33,5 +36,5 @@
 }
 else
 {
-    <p>I can't find any shopping lists. You can <a href="@Url.Action("Create")">make a new one.</a></p>
+    <p>I can't find any shopping lists. You can <a href="@Url.RouteUrl("ListCreate")">make a new one.</a></p>
 }

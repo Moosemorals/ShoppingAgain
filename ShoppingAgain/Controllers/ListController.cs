@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
+using ShoppingAgain.Events;
 using ShoppingAgain.Models;
 using ShoppingAgain.Services;
 
@@ -13,7 +14,6 @@ namespace ShoppingAgain
     [Route("l")]
     public class ListController : Controller
     {
-
         private readonly ShoppingService lists;
 
         public ListController(ShoppingService shoppingService)
@@ -39,16 +39,15 @@ namespace ShoppingAgain
         {
             if (ModelState.IsValid)
             {
-                list = lists.Add(list);
+                list = lists.CreateList(list);
                 Message("The list '{0}' has been created", list.Name);
                 return RedirectToRoute("ListDetails", new { id = list.ID });
-            }
-
+            } 
             return View(list);
         }
 
-        [HttpGet("{id:long:min(1)}/Edit", Name = "ListEdit")]
-        public IActionResult Edit(long id)
+        [HttpGet("{id:Guid}/Edit", Name = "ListEdit")]
+        public IActionResult Edit(Guid id)
         {
             ShoppingList list = lists.Get(id);
             if (list != null) { 
@@ -58,7 +57,7 @@ namespace ShoppingAgain
             return NotFound(); 
         }
 
-        [HttpPost("{id:long:min(1)}")]
+        [HttpPost("{id:Guid}")]
         public IActionResult Edit([Bind("ID, Name")]ShoppingList fromUser)
         {
             if (ModelState.IsValid)
@@ -72,7 +71,7 @@ namespace ShoppingAgain
 
                 list.Name = fromUser.Name;
 
-                lists.Update(list);
+                lists.UpdateList(list);
                 Message("The list '{0}' has been updated", list.Name);
                 return RedirectToRoute("ListDetails", new { id = list.ID });
             }
@@ -80,8 +79,8 @@ namespace ShoppingAgain
             return View(fromUser);
         } 
 
-        [HttpGet("{id:long:min(1)}", Name="ListDetails")]
-        public IActionResult Details(long id)
+        [HttpGet("{id:Guid}", Name="ListDetails")]
+        public IActionResult Details(Guid id)
         {
             ShoppingList list = lists.Get(id);
             if (list != null) { 
@@ -91,8 +90,8 @@ namespace ShoppingAgain
             return NotFound();
         }
 
-        [HttpGet("{id:long:min(1)}/Delete", Name = "ListDelete")]
-        public IActionResult Delete(long id)
+        [HttpGet("{id:Guid}/Delete", Name = "ListDelete")]
+        public IActionResult Delete(Guid id)
         {
             ShoppingList list = lists.Get(id);
             if (list != null)
@@ -102,21 +101,20 @@ namespace ShoppingAgain
             return NotFound();
         }
 
-        [HttpPost("{id:long:min(1)}/Delete")]
-        public IActionResult DeleteConfirmed(long id)
+        [HttpPost("{id:Guid}/Delete")]
+        public IActionResult DeleteConfirmed(Guid id)
         {
             ShoppingList list = lists.Get(id);
             if (list != null)
             {
-                lists.Delete(list);
+                lists.DeleteList(list);
                 return RedirectToRoute("ListIndex");
             }
             return NotFound();
         }
 
         private void Message(string format, params object[] args)
-        {
-            
+        { 
             TempData.Add(StaticNames.Message, string.Format(format, args));
         }
     }

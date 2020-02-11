@@ -37,7 +37,7 @@ namespace ShoppingAgain.Controllers
                 Name = name,
             };
 
-            list = _db.Add(list);
+            list = _db.CreateList(list);
 
             return CreatedAtAction("GetById", new { id = list.ID });
         }
@@ -46,7 +46,7 @@ namespace ShoppingAgain.Controllers
         [Produces(typeof(ShoppingList))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<ShoppingList> GetById(long id)
+        public ActionResult<ShoppingList> GetById(Guid id)
         {
             ShoppingList list = _db.Get(id);
             if (list != null)

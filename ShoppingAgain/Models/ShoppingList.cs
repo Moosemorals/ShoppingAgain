@@ -11,7 +11,7 @@ namespace ShoppingAgain.Models
         public ShoppingList() => Items = new List<Item>();
 
         [Key]
-        public int ID { get; set; }
+        public Guid ID { get; set; }
 
         [Required]
         public string Name { get; set; }

@@ -8,7 +8,7 @@ using ShoppingAgain.Services;
 
 namespace ShoppingAgain.Controllers
 {
-    [Route("l/{listId:long:min(1)}/items")]
+    [Route("l/{listId:Guid:min(1)}/items")]
     public class ItemController : Controller
     {
         private readonly ShoppingService lists;
@@ -19,7 +19,7 @@ namespace ShoppingAgain.Controllers
         }
 
         [HttpGet("", Name = "ItemIndex")]
-        public IActionResult Index(long listId)
+        public IActionResult Index(Guid listId)
         {
             ShoppingList list = lists.Get(listId);
 
@@ -32,7 +32,7 @@ namespace ShoppingAgain.Controllers
         }
 
         [HttpGet("new", Name = "ItemCreate")]
-        public IActionResult Create(long listId)
+        public IActionResult Create(Guid listId)
         {
             ShoppingList list = lists.Get(listId);
             if (list == null)
@@ -43,7 +43,7 @@ namespace ShoppingAgain.Controllers
         }
 
         [HttpPost("new")]
-        public IActionResult Create(long listId, [Bind("Name")]Item fromUser)
+        public IActionResult Create(Guid listId, [Bind("Name")]Item fromUser)
         {
             ShoppingList list = lists.Get(listId);
             if (list == null)
@@ -62,7 +62,7 @@ namespace ShoppingAgain.Controllers
                 State = ItemState.Wanted,
             });
 
-            lists.Update(list);
+            lists.UpdateList(list);
 
             return CreatedAtRoute("ListDetails", new { id = list.ID }, list);
         }

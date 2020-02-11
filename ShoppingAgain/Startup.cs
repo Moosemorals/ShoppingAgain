@@ -11,49 +11,54 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ShoppingAgain.Contexts;
+using ShoppingAgain.Events;
 using ShoppingAgain.Services;
 
 namespace ShoppingAgain
 {
     public class Startup
-    {
-
+    { 
         public IConfiguration Configuration { get; }
 
-        public IWebHostEnvironment env { get; }
+        public IWebHostEnvironment Env { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-            this.env = env;
+            this.Env = env;
 
-            using var db = new ShoppingContext();
-            db.Database.EnsureCreated();
-            db.Database.Migrate(); 
+            using var shopingDB = new ShoppingContext();
+            shopingDB.Database.EnsureCreated();
+            shopingDB.Database.Migrate();
+
+            using var eventsDB = new EventContext();
+            eventsDB.Database.EnsureCreated();
+            eventsDB.Database.Migrate();
         } 
 
         public void ConfigureServices(IServiceCollection services)
         {
             // Setup DI
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-            services.AddScoped<ShoppingContext>();
             services.AddScoped<ShoppingService>();
 
             // Setup MVC
             IMvcBuilder builder = services.AddMvc(options => options.EnableEndpointRouting = false);
-            if (env.IsDevelopment())
+            if (Env.IsDevelopment())
             {
                 builder.AddRazorRuntimeCompilation();
             }
 
             // Setup Database
-            services.AddEntityFrameworkSqlite().AddDbContext<ShoppingContext>();
+            services.AddEntityFrameworkSqlite()
+                .AddDbContext<ShoppingContext>()
+                .AddDbContext<EventContext>();
         }
 
         public void Configure(IApplicationBuilder app)
         {
 
-            if (env.IsDevelopment())
+            if (Env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }

@@ -8,7 +8,7 @@ namespace ShoppingAgain.Models
 {
     public class Item
     {
-        public long ID { get; set; }
+        public Guid ID { get; set; }
         public string Name { get; set; }
         public ItemState State { get; set; }
     }

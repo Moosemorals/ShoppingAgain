@@ -38,6 +38,6 @@
      </dl>
 </div>
 <div>
-    <a class="btn" href="@Url.Action("Edit", new { id = Model.ID })">Edit</a>
-    <a class="btn" href="@Url.Action("Index")">Back to List</a>
+    <a class="btn" href="@Url.RouteUrl("ListEdit", new { id = Model.ID })">Edit</a>
+    <a class="btn" href="@Url.RouteUrl("ListIndex")">Back to List</a>
 </div>
