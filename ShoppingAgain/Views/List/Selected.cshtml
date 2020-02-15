@@ -1,0 +1,41 @@
+﻿@using  ShoppingAgain.ViewModels
+@using  ShoppingAgain.Models;
+
+@model ShoppingList
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ShoppingList current = Model;
+    ViewBag.title = current.Name;
+}
+
+<form method="post" action="@Url.RouteUrl("ItemCreate", new { listId = current.ID })"> 
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+            </tr>
+            <tr id="list-controls">
+                <td>
+                    <input name="name" placeholder="New Item Name" required />
+                </td>
+                <td>
+                    <button type="submit">Add Item</button>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Item i in current.Items)
+            {
+                <tr>
+                    <td>@i.Name</td>
+                    <td>@i.State</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
+<nav>
+    <a href="@Url.RouteUrl("ListEdit", new { listId = current.ID })">Change the name of the list</a>
+</nav>
+

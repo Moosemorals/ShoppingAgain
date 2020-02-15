@@ -12,11 +12,6 @@
       "enabled": true,
       "commentMode": "important"
     }
-  },
-  {
-    "outputFileName": "wwwroot/styles/site.min.min.css",
-    "inputFiles": [
-      "wwwroot/styles/site.min.css"
-    ]
   }
+  
 ]

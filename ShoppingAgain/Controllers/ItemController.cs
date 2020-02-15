@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ShoppingAgain.Classes;
 using ShoppingAgain.Models;
 using ShoppingAgain.Services;
 
 namespace ShoppingAgain.Controllers
 {
-    [Route("l/{listId:Guid:min(1)}/items")]
+    [Route("l/{listId:Guid}/items")]
     public class ItemController : Controller
     {
         private readonly ShoppingService lists;
@@ -18,31 +19,7 @@ namespace ShoppingAgain.Controllers
             lists = shoppingService;
         }
 
-        [HttpGet("", Name = "ItemIndex")]
-        public IActionResult Index(Guid listId)
-        {
-            ShoppingList list = lists.Get(listId);
-
-            if (list != null)
-            {
-                return View(list);
-            }
-
-            return NotFound();
-        }
-
-        [HttpGet("new", Name = "ItemCreate")]
-        public IActionResult Create(Guid listId)
-        {
-            ShoppingList list = lists.Get(listId);
-            if (list == null)
-            {
-                return NotFound();
-            }
-            return View();
-        }
-
-        [HttpPost("new")]
+        [HttpPost("new", Name = "ItemCreate")]
         public IActionResult Create(Guid listId, [Bind("Name")]Item fromUser)
         {
             ShoppingList list = lists.Get(listId);
@@ -53,18 +30,94 @@ namespace ShoppingAgain.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(fromUser);
+                Message("There was a problem creating that item");
+                RedirectToRoute("Selected", new { listId = list.ID });
             }
 
-            list.Items.Add( new Item
-            {
-                Name = fromUser.Name,
-                State = ItemState.Wanted,
-            });
+            Item i = lists.CreateItem(list, fromUser.Name);
 
-            lists.UpdateList(list);
-
-            return CreatedAtRoute("ListDetails", new { id = list.ID }, list);
+            Message("The item {0} has been added to {1}", i.Name, list.Name);
+            return RedirectToRoute("Selected", new { listId = list.ID });
         }
+
+        [HttpPost("{itemId:guid}/delete", Name = "ItemDelete")]
+        public ActionResult Delete(Guid listId, Guid itemId)
+        {
+            ShoppingList list = lists.Get(listId);
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            Item item = list.Items.FirstOrDefault(i => i.ID == itemId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            list.Items.Remove(item);
+            lists.Update(list);
+
+            return RedirectToRoute("Selected", new { listId = list.ID });
+        }
+
+        [HttpPost("{itemId:guid}/state", Name = "ItemNextState")]
+        public ActionResult NextState(Guid listId, Guid itemId)
+        {
+            ShoppingList list = lists.Get(listId);
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            Item item = list.Items.FirstOrDefault(i => i.ID == itemId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            ItemState prev = item.State;
+            item.State = item.State.Next();
+            lists.Update(list);
+
+            Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
+            return RedirectToRoute("Selected", new { listId = list.ID });
+        }
+
+        [HttpPost("{itemId:guid}/state/{state}", Name = "ItemChangeState")]
+        public ActionResult ChangeState(Guid listId, Guid itemId, ItemState newState = ItemState.Unknown)
+        {
+            ShoppingList list = lists.Get(listId);
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            Item item = list.Items.FirstOrDefault(i => i.ID == itemId);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            if (newState == ItemState.Unknown)
+            {
+                Message("Could not work out what state you wanted {0} in", item.Name);
+                return RedirectToRoute("Selected", new { listId = list.ID });
+            }
+
+            ItemState prev = item.State;
+            item.State = newState;
+            lists.Update(list);
+
+            Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
+            return RedirectToRoute("Selected", new { listId = list.ID });
+        }
+
+
+        private void Message(string format, params object[] args)
+        {
+            TempData.Add(StaticNames.Message, string.Format(format, args));
+        }
+
     }
 }

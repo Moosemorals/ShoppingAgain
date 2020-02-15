@@ -1,40 +1,11 @@
-﻿@using  ShoppingAgain.Models
-@model IEnumerable<ShoppingList>
+﻿@using  ShoppingAgain.ViewModels
+@using  ShoppingAgain.Models;
+
+@model Shopping
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.title = "Your Shopping Lists";
 }
 
-@if (Model.Count() > 0)
-{
-        
-    <p><a href="@Url.RouteUrl("ListCreate")">Create List</a></p>
-
-    <table>
-        <thead>
-            <tr>
-                <th class="text-left">@Html.DisplayNameFor(x => x.Name)</th>
-                <th class="text-left">@Html.DisplayNameFor(x => x.Count)</th>
-                <th class="text-left">Actions</th>
-            </tr>
-        </thead>
-        <tbody id="listItems">
-            @foreach (ShoppingList list in Model)
-            {
-                <tr>
-                    <td>@Html.DisplayFor(x => list.Name)</td>
-                    <td>@Html.DisplayFor(x => list.Count)</td>
-                    <td>
-                        <a class="btn" href="@Url.RouteUrl("ListDetails", new { id = list.ID })">Details</a> |
-                        <a class="btn" href="@Url.RouteUrl("ListEdit", new { id = list.ID })">Edit</a> |
-                        <a class="btn" href="@Url.RouteUrl("ListDelete", new { id = list.ID })">Delete</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>I can't find any shopping lists. You can <a href="@Url.RouteUrl("ListCreate")">make a new one.</a></p>
-}
+<h2>Welcome to Shopping List!</h2>
+<p>Please use the menu on the left to select a list, or you can <a href="@Url.RouteUrl("ListCreate")">create a list</a>.</p>

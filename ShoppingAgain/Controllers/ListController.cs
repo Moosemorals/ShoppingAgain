@@ -7,6 +7,7 @@ using ShoppingAgain.Classes;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
 using ShoppingAgain.Services;
+using ShoppingAgain.ViewModels;
 
 namespace ShoppingAgain
 {
@@ -24,40 +25,60 @@ namespace ShoppingAgain
         [HttpGet("", Name = "ListIndex")]
         [Route("/")] // This is also our default route
         public IActionResult Index()
-        {
-            return View(lists.GetAll()); 
+        { 
+            ViewBag.Lists = lists.GetAll();
+            return View();
+        }
+
+        [HttpGet("{listId}", Name = "Selected")]
+        public IActionResult Selected(Guid listId)
+        { 
+            ShoppingList current = lists.Get(listId);
+            if (current == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Lists = lists.GetAll(); 
+            return View(current);
         }
 
         [HttpGet("new", Name = "ListCreate")]
         public IActionResult Create()
         {
+            ViewBag.Lists = lists.GetAll(); 
             return View();
         }
 
         [HttpPost("new")]
-        public IActionResult Create([Bind("Name")]ShoppingList list)
+        public IActionResult Create([Bind("Name")]ShoppingList fromUser)
         {
             if (ModelState.IsValid)
             {
-                list = lists.CreateList(list);
-                Message("The list '{0}' has been created", list.Name);
-                return RedirectToRoute("ListDetails", new { id = list.ID });
-            } 
-            return View(list);
-        }
-
-        [HttpGet("{id:Guid}/Edit", Name = "ListEdit")]
-        public IActionResult Edit(Guid id)
-        {
-            ShoppingList list = lists.Get(id);
-            if (list != null) { 
-                return View(list);
+                ShoppingList created = lists.CreateList(fromUser);
+                Message("The list '{0}' has been created", created.Name);
+                return RedirectToRoute("Selected", new { listId = created.ID });
             }
 
-            return NotFound(); 
+            ViewBag.Lists = lists.GetAll(); 
+            return View(fromUser);
         }
 
-        [HttpPost("{id:Guid}")]
+        [HttpGet("{listId:Guid}/Edit", Name = "ListEdit")]
+        public IActionResult Edit(Guid listId)
+        {
+            ShoppingList current = lists.Get(listId); 
+            if (current != null)
+            {
+                ViewBag.Lists = lists.GetAll(); 
+                return View(current);
+            }
+
+            Message("Can't find the list to change it's name");
+            return RedirectToRoute("ListIndex");
+        }
+
+        [HttpPost("{listId:Guid}/Edit")]
         public IActionResult Edit([Bind("ID, Name")]ShoppingList fromUser)
         {
             if (ModelState.IsValid)
@@ -71,23 +92,13 @@ namespace ShoppingAgain
 
                 list.Name = fromUser.Name;
 
-                lists.UpdateList(list);
+                lists.Update(list);
                 Message("The list '{0}' has been updated", list.Name);
                 return RedirectToRoute("ListDetails", new { id = list.ID });
             }
 
+            ViewBag.Lists = lists.GetAll(); 
             return View(fromUser);
-        } 
-
-        [HttpGet("{id:Guid}", Name="ListDetails")]
-        public IActionResult Details(Guid id)
-        {
-            ShoppingList list = lists.Get(id);
-            if (list != null) { 
-                return View(list);
-            }
-
-            return NotFound();
         }
 
         [HttpGet("{id:Guid}/Delete", Name = "ListDelete")]
@@ -96,6 +107,7 @@ namespace ShoppingAgain
             ShoppingList list = lists.Get(id);
             if (list != null)
             {
+                ViewBag.Lists = lists.GetAll(); 
                 return View(list);
             }
             return NotFound();
@@ -110,11 +122,12 @@ namespace ShoppingAgain
                 lists.DeleteList(list);
                 return RedirectToRoute("ListIndex");
             }
+            ViewBag.Lists = lists.GetAll(); 
             return NotFound();
         }
 
         private void Message(string format, params object[] args)
-        { 
+        {
             TempData.Add(StaticNames.Message, string.Format(format, args));
         }
     }

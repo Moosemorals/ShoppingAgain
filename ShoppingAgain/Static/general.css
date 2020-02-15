@@ -14,8 +14,11 @@ html {
 body {
     background: var(--background-color);
     color: var(--foreground-color);
-    display: flex;
-    flex-flow: column nowrap;
+    display: grid;
+    grid-template-columns: 14em 1fr;
+    grid-template-rows: 4em 1fr;
+    grid-template-areas: "header header" "menu main";
+
     font-family: "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
     font-size: 16px;
     line-height: 1.2;
@@ -24,14 +27,22 @@ body {
     --large-padding: 1.2em;
 }
  
-a {
-    text-decoration: none;
-}
-
-a:hover, a:active {
-    text-decoration: underline;
+a, a:visited {
+    color: var(--foreground-color);
 }
 
 #page-controls {
     margin-left: var(--large-padding);
+}
+
+header {
+    grid-area: header;
+}
+
+main {
+    grid-area: main;
+}
+
+aside {
+    grid-area: menu;
 }

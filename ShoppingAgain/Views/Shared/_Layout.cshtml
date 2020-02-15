@@ -1,11 +1,12 @@
 ﻿@using ShoppingAgain.Classes
+@using ShoppingAgain.Models
 @{
     Layout = null;
 
     string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
 }
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html lang="en-gb">
 <head>
     <meta charset="utf-8" />
@@ -15,28 +16,38 @@
     <link rel="stylesheet" type="text/css" href="~/styles/site.min.css" />
 </head>
 <body>
-    <nav id="main-controls">
-        @RenderSection("controls", false)
-    </nav>
-
-    <section id="title">
+    <header id="title">
         <h1>@_title</h1>
-    </section>
-
-    @if (TempData.ContainsKey(StaticNames.Message))
-    {
-        <section id="message">
-        <div>
-            @TempData[StaticNames.Message]
-        </div>
- 
-        </section>
-   } 
+    </header>
 
     <main>
-        @RenderBody()
+        @if (TempData.ContainsKey(StaticNames.Message))
+        {
+            <section id="message">
+                <div>
+                    @TempData[StaticNames.Message]
+                </div>
+            </section>
+        }
+        <section id="content">
+            @RenderBody()
+        </section>
+
     </main>
 
-    @RenderSection("scripts", false)
+    <aside>
+        <p>Click on the name of a list below to make that list active</p>
+        <ul>
+            @foreach (ShoppingList l in ViewBag.Lists)
+            {
+                <li><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
+            }
+        </ul>
+    </aside>
+
 </body>
 </html>
+
+
+
+

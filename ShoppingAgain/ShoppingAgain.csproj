@@ -19,7 +19,6 @@
     <Content Include="Static\general.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Static\layout.css" />
     <Content Include="Static\lists.css" />
     <Content Include="Static\tables.css" />
   </ItemGroup>

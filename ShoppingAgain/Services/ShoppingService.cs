@@ -40,6 +40,12 @@ namespace ShoppingAgain.Services
                 .Include(x => x.Items)
                 .FirstOrDefault(x => x.Name == name);
         }
+
+        public bool Exists(Guid id)
+        {
+            return _db.ShoppingLists.Any(l => l.ID == id);
+        }
+
         public bool ExistsByName(string name)
         {
             return _db.ShoppingLists.Any(l => l.Name == name);
@@ -54,7 +60,7 @@ namespace ShoppingAgain.Services
             return list;
         }
 
-        public void UpdateList(ShoppingList list)
+        public void Update(ShoppingList list)
         {
             _events.ListNameChanged(list.ID, list.Name);
             _db.ShoppingLists.Update(list);
@@ -68,7 +74,7 @@ namespace ShoppingAgain.Services
             _events.ListDeleted(list.ID);
         }
 
-        public void CreateItem(ShoppingList list, string itemName)
+        public Item CreateItem(ShoppingList list, string itemName)
         {
             Item i = new Item
             {
@@ -78,6 +84,8 @@ namespace ShoppingAgain.Services
             list.Items.Add(i);
             _db.SaveChanges();
             _events.ItemCreated(list.ID, i.ID, itemName);
+
+            return i;
         }
 
         public void ChangeItemName(ShoppingList list, Item item, string itemName)

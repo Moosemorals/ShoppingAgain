@@ -4,6 +4,10 @@ input {
     border-radius: calc(var(--small-padding) * 0.75); 
 }
 
+#list-controls input {
+    width: 100%;
+}
+
 .btn {
     --shadow-size: 2px;
     background: hsl(0, 0%, 50%);

@@ -84,19 +84,23 @@ namespace ShoppingAgain.Events
                     EventSource = id,
                     Version = 0,
                 };
+                _db.CurrentState.Add(s);
             }
             else
             {
                 s.Version += 1;
+                _db.CurrentState.Update(s);
             }
-            _db.EventLog.Add(new DBEvent
+
+            DBEvent e = new DBEvent
             {
                 EventSource = id,
                 Version = s.Version,
                 Payload = payload,
                 When = DateTimeOffset.UtcNow,
-            }) ;
-            _db.CurrentState.Update(s);
+            };
+
+            _db.EventLog.Add(e) ;
             _db.SaveChanges();
         }
     }

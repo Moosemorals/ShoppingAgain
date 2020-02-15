@@ -15,8 +15,26 @@ namespace ShoppingAgain.Models
 
     public enum ItemState
     {
+        Unknown,
         Wanted,
         Basket,
         Bought
+    }
+
+    public static class ItemStateMethods {
+        public static ItemState Next(this ItemState s)
+        {
+            switch (s)
+            {
+                case ItemState.Basket:
+                    return ItemState.Bought;
+                case ItemState.Bought:
+                    return ItemState.Wanted;
+                case ItemState.Wanted:
+                    return ItemState.Basket;
+                default:
+                    return ItemState.Unknown;
+            }
+        }
     }
 }
