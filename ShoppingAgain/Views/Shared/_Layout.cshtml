@@ -44,7 +44,7 @@
             @foreach (ShoppingList l in ViewBag.Lists)
             {
                 bool hl = hasList && l.ID == Model.ID;
-                <li id="@l.ID" highlight="hl"><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
+                <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
             }
         </ul>
 

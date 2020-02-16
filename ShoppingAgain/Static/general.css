@@ -7,8 +7,8 @@ html {
     --medium-color: hsl(0, 0, 50%);
     display: flex;
     flex-flow: row;
-    justify-content:flex-start;
-    align-content:flex-start;
+    justify-content: flex-start;
+    align-content: flex-start;
 }
 
 *, *:before, *:after {
@@ -23,7 +23,6 @@ body {
     grid-template-rows: 4em 1fr;
     grid-template-areas: "header header" "menu main";
     max-width: 80em;
-
     font-family: "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
     font-size: 16px;
     line-height: 1.2;
@@ -31,7 +30,7 @@ body {
     --small-padding: 0.2em;
     --large-padding: 1.2em;
 }
- 
+
 a, a:visited {
     color: var(--foreground-color);
 }
@@ -65,10 +64,37 @@ button.state {
     align-content: center;
 }
 
-.controls form:not(:last-of-type) {
-    padding-right: var(--large-padding);
+    .controls form:not(:last-of-type) {
+        padding-right: var(--large-padding);
+    }
+
+    .controls form:first-of-type {
+        padding-left: var(--large-padding);
+    }
+
+#lists {
+    padding: 0;
 }
 
-.controls form:first-of-type {
-    padding-left: var(--large-padding);
-}
+    #lists li {
+        border: 2px solid transparent;
+        padding: 2px 5px;
+        list-style-type: none;
+    }
+
+        #lists li.highlight::after {
+            content: " <-";
+        }
+        #lists li.highlight::before {
+            content: "-> ";
+        }
+
+
+        #lists li a {
+            font-size: inherit;
+            transition: font-size 0.3s ease
+        }
+
+            #lists li a:hover {
+                font-size: 140%;
+            }
