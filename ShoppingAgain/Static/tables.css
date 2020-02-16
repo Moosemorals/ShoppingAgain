@@ -7,10 +7,11 @@ table {
 
 th {
     padding: var(--small-padding);
+    text-align: left;
 }
 
-tbody {
-    border-top: 2px solid var(--foreground-color);
+thead {
+    border-bottom: 2px solid var(--foreground-color);
 }
 
 tr {
@@ -18,20 +19,32 @@ tr {
 }
 
 td {
-    border-left: var(--cell-border) ;
+    border-left: var(--cell-border);
     border-right: var(--cell-border);
     padding: var(--small-padding);
 }
 
-td:first-of-type {
-    border-left: none;
-}
+    td:first-of-type {
+        border-left: none;
+    }
 
-td:last-of-type {
-    border-right: none;
-}
+    td:last-of-type {
+        border-right: none;
+    }
 
 .text-left {
     text-align: left;
 }
 
+tbody {
+    border-bottom: var(--large-padding) solid transparent;
+    border-top: var(--large-padding) solid transparent;
+}
+
+tfoot { 
+    border-bottom: var(--large-padding) solid transparent;
+}
+
+tfoot td, tfoot tr {
+    border: none;
+}

@@ -1,0 +1,32 @@
+﻿
+svg .icon {
+    stroke:white;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    stroke-miterlimit:4;
+    stroke-opacity:1;
+    fill:none;
+    }
+
+svg .narrow {
+    stroke-width: 12;
+}
+svg .medium {
+    stroke-width: 16;
+}
+svg .wide {
+    stroke-width: 32;
+}
+
+svg .bought {
+    fill: green;
+}
+
+svg .edit {
+    stroke-width: 4.5;
+}
+
+svg .edit .fill {
+    stroke-width: 2.75;
+    fill: white;
+}

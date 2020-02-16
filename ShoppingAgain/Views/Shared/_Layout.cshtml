@@ -1,9 +1,11 @@
 ﻿@using ShoppingAgain.Classes
 @using ShoppingAgain.Models
+@model ShoppingList
 @{
     Layout = null;
-
     string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
+
+    bool hasList = Model != null;
 }
 
 <!DOCTYPE html>
@@ -40,9 +42,12 @@
         <ul>
             @foreach (ShoppingList l in ViewBag.Lists)
             {
-                <li><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
+                bool hl = hasList && l.ID == Model.ID;
+                <li highlight="hl"><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
             }
         </ul>
+
+        <p><a href="@Url.RouteUrl("ListCreate")">Create a list</a></p>
     </aside>
 
 </body>

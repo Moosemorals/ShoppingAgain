@@ -5,6 +5,10 @@ html {
     --foreground-color: #faebd7;
     --background-color: #111;
     --medium-color: hsl(0, 0, 50%);
+    display: flex;
+    flex-flow: row;
+    justify-content:flex-start;
+    align-content:flex-start;
 }
 
 *, *:before, *:after {
@@ -18,6 +22,7 @@ body {
     grid-template-columns: 14em 1fr;
     grid-template-rows: 4em 1fr;
     grid-template-areas: "header header" "menu main";
+    max-width: 80em;
 
     font-family: "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
     font-size: 16px;
@@ -45,4 +50,25 @@ main {
 
 aside {
     grid-area: menu;
+}
+
+
+button.state {
+    background: inherit;
+    color: inherit;
+}
+
+.controls {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-content: center;
+}
+
+.controls form:not(:last-of-type) {
+    padding-right: var(--large-padding);
+}
+
+.controls form:first-of-type {
+    padding-left: var(--large-padding);
 }

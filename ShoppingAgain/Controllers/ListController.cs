@@ -7,7 +7,6 @@ using ShoppingAgain.Classes;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
 using ShoppingAgain.Services;
-using ShoppingAgain.ViewModels;
 
 namespace ShoppingAgain
 {

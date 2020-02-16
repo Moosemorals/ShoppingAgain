@@ -1,5 +1,4 @@
-﻿@using  ShoppingAgain.ViewModels
-@using  ShoppingAgain.Models;
+﻿@using  ShoppingAgain.Models;
 
 @model ShoppingList
 @{
@@ -8,34 +7,49 @@
     ViewBag.title = current.Name;
 }
 
-<form method="post" action="@Url.RouteUrl("ItemCreate", new { listId = current.ID })"> 
-    <table>
-        <thead>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Controls</th>
+        </tr>
+    </thead>
+    <tbody class="items">
+        @foreach (Item i in current.Items)
+        {
             <tr>
-                <th>Name</th>
-                <th>Status</th>
-            </tr>
-            <tr id="list-controls">
-                <td>
-                    <input name="name" placeholder="New Item Name" required />
+                <td>@i.Name</td>
+                <td class="controls">
+                    <form method="post" action="@Url.RouteUrl("ItemNextState", new { listId = current.ID, itemId = i.ID })">
+                        <button class="state" type="submit"><state s="@i.State"></button>
+                    </form>
+                    <form method="post" action="@Url.RouteUrl("ItemDelete", new { listId = current.ID, itemId = i.ID })">
+                    <button class="state" type="submit"><icon src="~/images/trash.svg"></button>
+                    </form>
+                    <form method="post" action="@Url.RouteUrl("ItemEdit", new { listId = current.ID, itemId = i.ID })">
+                        <button class="state" type="submit"><icon src="~/images/edit.svg"></button>
+                    </form>
                 </td>
-                <td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr id="list-controls">
+            <td>
+                <input form="ItemCreate" name="name" placeholder="New Item Name" required />
+            </td>
+            <td>
+                <form id="ItemCreate" method="post" action="@Url.RouteUrl("ItemCreate", new { listId = current.ID })">
                     <button type="submit">Add Item</button>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (Item i in current.Items)
-            {
-                <tr>
-                    <td>@i.Name</td>
-                    <td>@i.State</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</form>
-<nav>
+                </form>
+
+
+            </td>
+        </tr>
+
+    </tfoot>
+</table>
+<p>
     <a href="@Url.RouteUrl("ListEdit", new { listId = current.ID })">Change the name of the list</a>
-</nav>
+</p>
 

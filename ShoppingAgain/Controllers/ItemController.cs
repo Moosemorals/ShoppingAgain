@@ -40,7 +40,7 @@ namespace ShoppingAgain.Controllers
             return RedirectToRoute("Selected", new { listId = list.ID });
         }
 
-        [HttpPost("{itemId:guid}/delete", Name = "ItemDelete")]
+        [HttpPost("{itemId:Guid}/delete", Name = "ItemDelete")]
         public ActionResult Delete(Guid listId, Guid itemId)
         {
             ShoppingList list = lists.Get(listId);
@@ -61,7 +61,7 @@ namespace ShoppingAgain.Controllers
             return RedirectToRoute("Selected", new { listId = list.ID });
         }
 
-        [HttpPost("{itemId:guid}/state", Name = "ItemNextState")]
+        [HttpPost("{itemId:Guid}/state", Name = "ItemNextState")]
         public ActionResult NextState(Guid listId, Guid itemId)
         {
             ShoppingList list = lists.Get(listId);
@@ -77,14 +77,14 @@ namespace ShoppingAgain.Controllers
             }
 
             ItemState prev = item.State;
-            item.State = item.State.Next();
-            lists.Update(list);
+            lists.ChangeItemState(list, item, item.State.Next());
+
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
             return RedirectToRoute("Selected", new { listId = list.ID });
         }
 
-        [HttpPost("{itemId:guid}/state/{state}", Name = "ItemChangeState")]
+        [HttpPost("{itemId:Guid}/state/{state}", Name = "ItemChangeState")]
         public ActionResult ChangeState(Guid listId, Guid itemId, ItemState newState = ItemState.Unknown)
         {
             ShoppingList list = lists.Get(listId);
@@ -111,8 +111,7 @@ namespace ShoppingAgain.Controllers
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
             return RedirectToRoute("Selected", new { listId = list.ID });
-        }
-
+        } 
 
         private void Message(string format, params object[] args)
         {
