@@ -28,7 +28,7 @@ namespace ShoppingAgain
         [Route("/")] // This is also our default route
         public IActionResult Index()
         {
-            ViewBag.Lists = lists.GetAll();
+            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View();
         }
 
@@ -41,14 +41,14 @@ namespace ShoppingAgain
                 return NotFound();
             }
 
-            ViewBag.Lists = lists.GetAll();
+            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(current);
         }
 
         [HttpGet("new", Name = "ListCreate")]
         public IActionResult Create()
         {
-            ViewBag.Lists = lists.GetAll();
+            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View();
         }
 
@@ -62,7 +62,7 @@ namespace ShoppingAgain
                 return RedirectToRoute("Selected", new { listId = created.ID });
             }
 
-            ViewBag.Lists = lists.GetAll();
+            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(fromUser);
         }
 
@@ -72,7 +72,7 @@ namespace ShoppingAgain
             ShoppingList current = lists.Get(listId);
             if (current != null)
             {
-                ViewBag.Lists = lists.GetAll();
+                ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
                 return View(current);
             }
 
@@ -99,7 +99,7 @@ namespace ShoppingAgain
                 return RedirectToRoute("ListDetails", new { id = list.ID });
             }
 
-            ViewBag.Lists = lists.GetAll();
+            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(fromUser);
         }
 
@@ -109,7 +109,7 @@ namespace ShoppingAgain
             ShoppingList list = lists.Get(id);
             if (list != null)
             {
-                ViewBag.Lists = lists.GetAll();
+                ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
                 return View(list);
             }
             return NotFound();

@@ -14,17 +14,32 @@
             <th>Controls</th>
         </tr>
     </thead>
-    <tbody class="items">
+    <tbody class="items" id="list">
+        <tr id="list-tr-template" hidden>
+            <td></td>
+            <td class="controls">
+                <form class="state-form" method="post" action="">
+                    <button class="state" type="submit"><img /></button>
+                </form>
+                <form class="delete-form" method="post" action="">
+                    <button class="state" type="submit"><img /></button>
+                </form>
+                <form method="post" action="">
+                    <button class="state" type="submit"><img /></button>
+                </form>
+
+            </td>
+        </tr>
         @foreach (Item i in current.Items)
         {
-            <tr>
+            <tr id="@i.ID">
                 <td>@i.Name</td>
                 <td class="controls">
                     <form method="post" action="@Url.RouteUrl("ItemNextState", new { listId = current.ID, itemId = i.ID })">
                         <button class="state" type="submit"><state s="@i.State"></button>
                     </form>
                     <form method="post" action="@Url.RouteUrl("ItemDelete", new { listId = current.ID, itemId = i.ID })">
-                    <button class="state" type="submit"><icon src="~/images/trash.svg"></button>
+                        <button class="state" type="submit"><icon src="~/images/trash.svg"></button>
                     </form>
                     <form method="post" action="@Url.RouteUrl("ItemEdit", new { listId = current.ID, itemId = i.ID })">
                         <button class="state" type="submit"><icon src="~/images/edit.svg"></button>

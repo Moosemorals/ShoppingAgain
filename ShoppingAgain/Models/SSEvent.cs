@@ -17,7 +17,7 @@ namespace ShoppingAgain.Events
 
         public SSEvent(string value)
         {
-            Field = "event";
+            Field = "data";
             Value = value;
         }
 
@@ -34,15 +34,15 @@ namespace ShoppingAgain.Events
         {
             if (string.IsNullOrEmpty(Field))
             {
-                return ":\n";
+                return ":\n\n";
             }
             else if (string.IsNullOrEmpty(Value))
             {
-                return Field + ":\n";
+                return Field + ":\n\n";
             }
             else
             {
-                return Field + ":" + Value + "\n";
+                return Field + ":" + Value + "\n\n";
             }
         }
 

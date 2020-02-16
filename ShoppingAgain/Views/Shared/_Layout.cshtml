@@ -39,11 +39,12 @@
 
     <aside>
         <p>Click on the name of a list below to make that list active</p>
-        <ul>
+        <ul id="lists">
+            <li id="lists-li-template" hidden><a href=""></a></li>
             @foreach (ShoppingList l in ViewBag.Lists)
             {
                 bool hl = hasList && l.ID == Model.ID;
-                <li highlight="hl"><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
+                <li id="@l.ID" highlight="hl"><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
             }
         </ul>
 

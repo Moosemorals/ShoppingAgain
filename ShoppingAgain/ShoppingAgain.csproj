@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>e</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\static\shopping.min.js" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Static\basket.svg" />
@@ -16,6 +21,7 @@
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\static\shopping.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\static\shopping.min.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,6 +70,10 @@
   <ItemGroup>
     <Folder Include="wwwroot\scripts\" />
     <Folder Include="wwwroot\styles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\static\shopping.min.js" />
   </ItemGroup>
 
 </Project>
