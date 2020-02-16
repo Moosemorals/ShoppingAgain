@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +19,9 @@ using ShoppingAgain.Services;
 namespace ShoppingAgain
 {
     public class Startup
-    { 
+    {
+        private static RNGCryptoServiceProvider RNG = new RNGCryptoServiceProvider();
+
         public IConfiguration Configuration { get; }
 
         public IWebHostEnvironment Env { get; }
@@ -59,6 +62,14 @@ namespace ShoppingAgain
                 .AddDbContext<EventContext>();
         }
 
+        private string BuildNonce(int chars)
+        {
+            byte[] raw = new byte[chars];
+            RNG.GetBytes(raw);
+
+            return System.Convert.ToBase64String(raw);
+        }
+
         public void Configure(IApplicationBuilder app)
         {
 
@@ -70,7 +81,9 @@ namespace ShoppingAgain
             // Add CSP header
             app.Use(async (ctx, next) =>
             {
-                ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; ");
+                string n = BuildNonce(12);
+                ctx.Items.Add("script-nonce", n);
+                ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'nonce-" + n + "';");
                 await next();
             });
 

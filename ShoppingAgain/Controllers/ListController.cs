@@ -41,6 +41,7 @@ namespace ShoppingAgain
                 return NotFound();
             }
 
+            ViewBag.Nonce = HttpContext.Items["script-nonce"] as string;
             ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(current);
         }

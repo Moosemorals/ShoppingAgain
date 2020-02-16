@@ -67,4 +67,9 @@
 <p>
     <a href="@Url.RouteUrl("ListEdit", new { listId = current.ID })">Change the name of the list</a>
 </p>
+@section scripts  {
+    <script nonce="@ViewBag.Nonce">
+        const currentList = "@current.ID";
+    </script>
 
+}
