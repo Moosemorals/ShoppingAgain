@@ -30,9 +30,6 @@ namespace ShoppingAgain.Services
             _events.ShoppingEvents -= handler;
         }
 
-
-
-
         public IEnumerable<ShoppingList> GetAll()
         {
             return _db.ShoppingLists
@@ -66,18 +63,21 @@ namespace ShoppingAgain.Services
 
         public ShoppingList CreateList(ShoppingList list)
         {
-            _events.ListCreated(list.ID, list.Name);
             _db.ShoppingLists.Add(list);
             _db.SaveChanges();
-
+            _events.ListCreated(list.ID, list.Name);
             return list;
         }
 
-        public void Update(ShoppingList list)
+        public ShoppingList ChangeName(ShoppingList list, string newName)
         {
-            _events.ListNameChanged(list.ID, list.Name);
+            string oldName = list.Name;
+            list.Name = newName;
             _db.ShoppingLists.Update(list);
             _db.SaveChanges();
+            _events.ListNameChanged(list.ID, oldName, newName);
+
+            return list;
         }
 
         internal void DeleteList(ShoppingList list)
@@ -101,21 +101,23 @@ namespace ShoppingAgain.Services
             return i;
         }
 
-        public void ChangeItemName(ShoppingList list, Item item, string itemName)
+        public void ChangeItemName(ShoppingList list, Item item, string newName)
         {
-            item.Name = itemName;
+            string oldName = item.Name;
+            item.Name = newName;
             _db.SaveChanges();
-            _events.ItemNameChanged(list.ID, item.ID, itemName);
+            _events.ItemNameChanged(list.ID, item.ID, oldName, newName);
         }
 
-        public void ChangeItemState(ShoppingList list, Item item, ItemState state)
+        public void ChangeItemState(ShoppingList list, Item item, ItemState newState)
         {
-            item.State = state;
+            ItemState oldState = item.State;
+            item.State = newState;
             _db.SaveChanges();
-            _events.ItemStateChanged(list.ID, item.ID, state);
+            _events.ItemStateChanged(list.ID, item.ID,oldState, newState);
         }
 
-        public void DeleteItem(ShoppingList list, Item item)
+        public void RemoveItem(ShoppingList list, Item item)
         {
             list.Items.Remove(item);
             _db.SaveChanges();

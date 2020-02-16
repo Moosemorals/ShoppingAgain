@@ -55,8 +55,7 @@ namespace ShoppingAgain.Controllers
                 return NotFound();
             }
 
-            list.Items.Remove(item);
-            lists.Update(list);
+            lists.RemoveItem(list, item);
 
             return RedirectToRoute("Selected", new { listId = list.ID });
         }
@@ -106,8 +105,7 @@ namespace ShoppingAgain.Controllers
             }
 
             ItemState prev = item.State;
-            item.State = newState;
-            lists.Update(list);
+            lists.ChangeItemState(list, item, item.State.Next());
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
             return RedirectToRoute("Selected", new { listId = list.ID });

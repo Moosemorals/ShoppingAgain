@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using ShoppingAgain.Models;
 using System;
 using System.Collections.Generic;
@@ -17,43 +18,43 @@ namespace ShoppingAgain.Events
             _db = new EventContext();
         }
 
-        public void ListCreated(Guid ListId, string Name)
+        public void ListCreated(Guid listId, string Name)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ListCreated, ListId, Name, null, null));
+            SendEvent(listId, new ListCreatedEvent(listId, Name));
         }
 
-        public void ListNameChanged(Guid ListId, string Name)
+        public void ListNameChanged(Guid ListId, string oldName, string newName)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ListNameChanged, ListId, Name, null, null));
+            SendEvent(ListId, new ListRenamedEvent(ListId, oldName, newName));
         }
 
-        public void ListDeleted(Guid ListId)
+        public void ListDeleted(Guid listId)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ListDeleted, ListId, null, null, null));
-        } 
+            SendEvent(listId, new ListDeletedEvent(listId));
+        }
 
-        public void ItemCreated(Guid ListId, Guid ItemId, string Name)
+        public void ItemCreated(Guid listId, Guid itemId, string Name)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ItemCreated, ListId, Name, ItemId, null));
-        } 
+            SendEvent(listId, new ItemCreatedEvent(listId, itemId, Name));
+        }
 
-        public void ItemNameChanged(Guid ListId, Guid ItemId, string Name)
+        public void ItemNameChanged(Guid listId, Guid itemId, string oldName, string newName)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ItemNameChanged, ListId, Name, ItemId, null));
+            SendEvent(listId, new ItemRenamedEvent(listId, itemId, oldName, newName));
         }
-        public void ItemStateChanged(Guid ListId, Guid ItemId, ItemState State)
+        public void ItemStateChanged(Guid listId, Guid itemId, ItemState oldState, ItemState newState)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ItemNameChanged, ListId, null, ItemId, State));
+            SendEvent(listId, new ItemStateChangedEvent(listId, itemId, oldState, newState));
         }
-        public void ItemDeleted(Guid ListId, Guid ItemId)
+        public void ItemDeleted(Guid listId, Guid itemId)
         {
-            SendEvent(ListId, new ShoppingEvent(EventType.ItemDeleted, ListId, null, ItemId, null));
+            SendEvent(listId, new ItemDeletedEvent(listId, itemId));
         }
- 
+
         private void SendEvent(Guid EventSource, ShoppingEvent e)
         {
             LogEvent(EventSource, JsonConvert.SerializeObject(e));
-            ShoppingEvents?.Invoke(this, e); 
+            ShoppingEvents?.Invoke(this, e);
         }
 
         private State GetState(Guid EventSource)
@@ -100,38 +101,120 @@ namespace ShoppingAgain.Events
                 When = DateTimeOffset.UtcNow,
             };
 
-            _db.EventLog.Add(e) ;
+            _db.EventLog.Add(e);
             _db.SaveChanges();
         }
     }
 
 
-    public class ShoppingEvent
+    public abstract class ShoppingEvent
     {
-        public EventType Type { get; }
-        public Guid? ListId { get; }
-        public Guid? ItemId { get; }
-        public string Name { get; }
-        public ItemState? ItemState { get; }
-
-        public ShoppingEvent(EventType type, Guid listId, string name, Guid? itemId, ItemState? itemState)
+        [JsonConverter(typeof(StringEnumConverter)), JsonProperty("eventType")]
+        public ShoppingEventType Type { get; }
+        [JsonProperty("listId")]
+        public Guid ListId { get; }
+        public ShoppingEvent(ShoppingEventType type, Guid listId)
         {
             Type = type;
             ListId = listId;
-            ItemId = itemId;
-            Name = name;
-            ItemState = itemState;
         }
     }
 
-    public enum EventType
+    public class ListCreatedEvent : ShoppingEvent
     {
-        ListCreated,            // ListId 
-        ListNameChanged,        // ListId, Name
-        ListDeleted,            // ListId
-        ItemCreated,            // ListId, ItemId
-        ItemNameChanged,        // ListId, ItemId, Name
-        ItemStateChanged,       // ListId, ItemId, ItemState
-        ItemDeleted             // ListId, ItemId
+        [JsonProperty("listName")]
+        public string Name { get; }
+        public ListCreatedEvent(Guid listId, string name) : base(ShoppingEventType.ListCreated, listId)
+        {
+            Name = name;
+        }
+    }
+
+    public class ListRenamedEvent : ShoppingEvent
+    {
+        [JsonProperty("oldListName")]
+        public string OldName { get; }
+        [JsonProperty("newListName")]
+        public string NewName { get; }
+        public ListRenamedEvent(Guid listId, string oldName, string newName) : base(ShoppingEventType.ListRenamed, listId)
+        {
+            OldName = oldName;
+            NewName = NewName;
+        }
+    }
+
+    public class ListDeletedEvent : ShoppingEvent
+    {
+        public ListDeletedEvent(Guid listId) : base(ShoppingEventType.ListDeleted, listId)
+        {
+        }
+    }
+
+    public abstract class ItemEvent : ShoppingEvent
+    {
+        [JsonProperty("itemId")]
+        public Guid ItemId { get; }
+
+        public ItemEvent(Guid listId, Guid itemId, ShoppingEventType type) : base(type, listId)
+        {
+            ItemId = itemId;
+        }
+    }
+
+    public class ItemCreatedEvent : ItemEvent
+    {
+        [JsonProperty("itemName")]
+        public string Name { get; }
+        public ItemCreatedEvent(Guid listId, Guid itemId, string name) : base(listId, itemId, ShoppingEventType.ItemCreated)
+        {
+            Name = name;
+        }
+    }
+
+    public class ItemRenamedEvent : ItemEvent
+    {
+        [JsonProperty("oldItemName")]
+        public string OldName { get; }
+
+        [JsonProperty("newItemName")]
+        public string NewName { get; }
+
+        public ItemRenamedEvent(Guid listId, Guid itemId, string oldName, string newName) : base(listId, itemId, ShoppingEventType.ItemRenamed)
+        {
+            OldName = oldName;
+            NewName = newName;
+        }
+    }
+
+    public class ItemStateChangedEvent : ItemEvent
+    {
+        [JsonProperty("oldItemState")]
+        public ItemState OldState { get; }
+
+        [JsonProperty("newItemState")]
+        public ItemState NewState { get; }
+
+        public ItemStateChangedEvent(Guid listId, Guid itemId, ItemState oldState, ItemState newState) : base(listId, itemId, ShoppingEventType.ItemStateChanged)
+        {
+            OldState = oldState;
+            NewState = newState;
+        }
+    }
+
+    public class ItemDeletedEvent : ItemEvent
+    {
+        public ItemDeletedEvent(Guid listId, Guid itemId) : base(listId, itemId, ShoppingEventType.ItemDeleted) { }
+    }
+
+
+    public enum ShoppingEventType
+    {
+        ListCreated,
+        ListRenamed,
+        ListDeleted,
+        ItemCreated,
+        ItemRenamed,
+        ItemStateChanged,
+        ItemDeleted
     }
 }

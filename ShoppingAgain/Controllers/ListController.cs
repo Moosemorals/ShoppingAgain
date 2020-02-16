@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
@@ -91,10 +92,10 @@ namespace ShoppingAgain
                     return RedirectToAction("Index");
                 }
 
-                list.Name = fromUser.Name;
+                string oldName = list.Name;
+                lists.ChangeName(list, fromUser.Name);
 
-                lists.Update(list);
-                Message("The list '{0}' has been updated", list.Name);
+                Message("The list '{0}' has been renamed to {1}", oldName, list.Name);
                 return RedirectToRoute("ListDetails", new { id = list.ID });
             }
 
@@ -139,7 +140,7 @@ namespace ShoppingAgain
                     lists.RemoveEventListener(handler);
                     return;
                 }
-                SSEvent SSE = new SSEvent(e.Type.ToString());
+                SSEvent SSE = new SSEvent(JsonConvert.SerializeObject(e));
 
                 await Response.WriteAsync(SSE.ToString());
                 await Response.Body.FlushAsync(token);
@@ -148,7 +149,6 @@ namespace ShoppingAgain
             lists.AddEventListener(handler);
             Response.StatusCode = StatusCodes.Status200OK;
             Response.Headers.Add("Content-Type", "text/event-stream");
-            Response.Headers.Remove("Transfer-Encoding");
             await Response.StartAsync(token);
 
             try
