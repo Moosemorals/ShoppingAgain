@@ -1,6 +1,6 @@
 [
   {
-    "outputFileName": "wwwroot/styles/site.css",
+    "outputFileName": "wwwroot/static/shopping.css",
     "inputFiles": [
       "Static/normalize.css",
       "Static/general.css",
@@ -11,7 +11,16 @@
     ],
     "minify": {
       "enabled": true,
-      "commentMode": "important"
+      "commentMode": "important" 
+    }
+  },
+  {
+    "outputFileName": "wwwroot/static/shopping.js",
+    "inputFiles": [
+      "Static/shopping.js"
+    ],
+    "minify": {
+      "enabled": true
     }
   }
 ]

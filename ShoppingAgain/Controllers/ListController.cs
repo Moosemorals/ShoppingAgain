@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Events;
@@ -24,28 +26,28 @@ namespace ShoppingAgain
         [HttpGet("", Name = "ListIndex")]
         [Route("/")] // This is also our default route
         public IActionResult Index()
-        { 
+        {
             ViewBag.Lists = lists.GetAll();
             return View();
         }
 
         [HttpGet("{listId}", Name = "Selected")]
         public IActionResult Selected(Guid listId)
-        { 
+        {
             ShoppingList current = lists.Get(listId);
             if (current == null)
             {
                 return NotFound();
             }
 
-            ViewBag.Lists = lists.GetAll(); 
+            ViewBag.Lists = lists.GetAll();
             return View(current);
         }
 
         [HttpGet("new", Name = "ListCreate")]
         public IActionResult Create()
         {
-            ViewBag.Lists = lists.GetAll(); 
+            ViewBag.Lists = lists.GetAll();
             return View();
         }
 
@@ -59,17 +61,17 @@ namespace ShoppingAgain
                 return RedirectToRoute("Selected", new { listId = created.ID });
             }
 
-            ViewBag.Lists = lists.GetAll(); 
+            ViewBag.Lists = lists.GetAll();
             return View(fromUser);
         }
 
         [HttpGet("{listId:Guid}/Edit", Name = "ListEdit")]
         public IActionResult Edit(Guid listId)
         {
-            ShoppingList current = lists.Get(listId); 
+            ShoppingList current = lists.Get(listId);
             if (current != null)
             {
-                ViewBag.Lists = lists.GetAll(); 
+                ViewBag.Lists = lists.GetAll();
                 return View(current);
             }
 
@@ -96,7 +98,7 @@ namespace ShoppingAgain
                 return RedirectToRoute("ListDetails", new { id = list.ID });
             }
 
-            ViewBag.Lists = lists.GetAll(); 
+            ViewBag.Lists = lists.GetAll();
             return View(fromUser);
         }
 
@@ -106,23 +108,59 @@ namespace ShoppingAgain
             ShoppingList list = lists.Get(id);
             if (list != null)
             {
-                ViewBag.Lists = lists.GetAll(); 
+                ViewBag.Lists = lists.GetAll();
                 return View(list);
             }
             return NotFound();
         }
 
-        [HttpPost("{id:Guid}/Delete")]
-        public IActionResult DeleteConfirmed(Guid id)
+        [HttpPost("{listId:Guid}/Delete")]
+        public IActionResult DeleteConfirmed(Guid listId)
         {
-            ShoppingList list = lists.Get(id);
+            ShoppingList list = lists.Get(listId);
             if (list != null)
             {
                 lists.DeleteList(list);
+                Message("List {0} has been deleted", list.Name);
                 return RedirectToRoute("ListIndex");
             }
-            ViewBag.Lists = lists.GetAll(); 
-            return NotFound();
+            Message("Couldn't find that list to delete");
+            return RedirectToRoute("ListIndex");
+        }
+
+        [HttpGet("/events")]
+        public async Task EventStream()
+        {
+            Response.StatusCode = StatusCodes.Status200OK;
+            Response.Headers.Add("Content-Type", "text/event-stream");
+            Response.Headers.Remove("Transfer-Encoding");
+
+            CancellationToken token = Request.HttpContext.RequestAborted;
+
+            async void handler(object source, ShoppingEvent e)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    lists.RemoveEventListener(handler);
+                    return;
+                }
+                SSEvent SSE = new SSEvent(e.Type.ToString());
+
+                await Response.WriteAsync(SSE.ToString());
+                await Response.Body.FlushAsync(token);
+            }
+
+            lists.AddEventListener(handler);
+
+            while (!token.IsCancellationRequested)
+            {
+                await Response.WriteAsync(SSEvent.Heartbeat.ToString(), token);
+                await Response.Body.FlushAsync(token);
+ 
+                await Task.Delay(25 * 1000, token);
+            }
+
+
         }
 
         private void Message(string format, params object[] args)

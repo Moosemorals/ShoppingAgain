@@ -14,11 +14,24 @@ namespace ShoppingAgain.Services
         private readonly ShoppingContext _db;
         private readonly EventService _events;
 
-        public ShoppingService()
+        public ShoppingService(EventService events)
         {
             _db = new ShoppingContext();
-            _events = new EventService();
+            _events = events;
         }
+
+        public void AddEventListener(EventHandler<ShoppingEvent> handler)
+        {
+            _events.ShoppingEvents += handler;
+        }
+
+        public void RemoveEventListener(EventHandler<ShoppingEvent> handler)
+        {
+            _events.ShoppingEvents -= handler;
+        }
+
+
+
 
         public IEnumerable<ShoppingList> GetAll()
         {

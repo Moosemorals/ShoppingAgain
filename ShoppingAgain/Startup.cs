@@ -43,6 +43,7 @@ namespace ShoppingAgain
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<EventService, EventService>();
             services.AddScoped<ShoppingService>();
 
             // Setup MVC

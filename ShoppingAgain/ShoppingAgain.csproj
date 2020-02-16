@@ -15,11 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\static\shopping.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Static\form.css" />
     <Content Include="Static\general.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Static\lists.css" />
+    <Content Include="Static\shopping.js" />
     <Content Include="Static\tables.css" />
   </ItemGroup>
 
@@ -30,10 +35,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\scripts\shopping.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -61,6 +62,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\scripts\" />
     <Folder Include="wwwroot\styles\" />
   </ItemGroup>
 
