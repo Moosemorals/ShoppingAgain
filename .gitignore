@@ -338,5 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# Other files
+.sqlite
 /ShoppingAgain/wwwroot/styles
 /ShoppingAgain/wwwroot/static
