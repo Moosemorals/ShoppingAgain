@@ -131,12 +131,7 @@ namespace ShoppingAgain
         [HttpGet("/events")]
         public async Task EventStream()
         {
-            Response.StatusCode = StatusCodes.Status200OK;
-            Response.Headers.Add("Content-Type", "text/event-stream");
-            Response.Headers.Remove("Transfer-Encoding");
-
             CancellationToken token = Request.HttpContext.RequestAborted;
-
             async void handler(object source, ShoppingEvent e)
             {
                 if (token.IsCancellationRequested)
@@ -151,16 +146,29 @@ namespace ShoppingAgain
             }
 
             lists.AddEventListener(handler);
+            Response.StatusCode = StatusCodes.Status200OK;
+            Response.Headers.Add("Content-Type", "text/event-stream");
+            Response.Headers.Remove("Transfer-Encoding");
+            await Response.StartAsync(token);
 
-            while (!token.IsCancellationRequested)
+            try
             {
-                await Response.WriteAsync(SSEvent.Heartbeat.ToString(), token);
-                await Response.Body.FlushAsync(token);
- 
-                await Task.Delay(25 * 1000, token);
+                while (!token.IsCancellationRequested)
+                {
+                    await Response.WriteAsync(SSEvent.Heartbeat.ToString(), token);
+                    await Response.Body.FlushAsync(token);
+                    await Task.Delay(25 * 1000, token);
+                }
             }
-
-
+            catch (TaskCanceledException)
+            {
+                // This isn't unexpected, and i don't want to bother the logs
+                // so, ignoring the exception
+            }
+            finally
+            {
+                lists.RemoveEventListener(handler);
+            }
         }
 
         private void Message(string format, params object[] args)

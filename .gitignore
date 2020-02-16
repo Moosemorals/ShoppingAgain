@@ -343,3 +343,4 @@ healthchecksdb
 .sqlite
 /ShoppingAgain/wwwroot/styles
 /ShoppingAgain/wwwroot/static
+*.sqlite
