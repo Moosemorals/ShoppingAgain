@@ -1,22 +1,20 @@
-﻿@using  ShoppingAgain.Models
-@model ShoppingList
+﻿@model ShoppingList
 @{
     ViewData["Title"] = "Create New Shopping List";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Html.BeginForm())
-{
+<form method="post" asp-route="@StaticNames.ListCreate"> 
     <dl>
-        <dt>@Html.LabelFor(x => x.Name)</dt>
+        <dt><label asp-for="Name"></label></dt>
         <dd>
-            @Html.EditorFor(x => x.Name)
-            @Html.ValidationMessageFor(x => x.Name)
+            <input asp-for="Name" required /><br />
+            <span asp-validation-for="Name"></span>
         </dd>
     </dl>
 
     <div>
-        <button type="submit">Create List</button>
-        <a href="@Url.RouteUrl("ListIndex")">Cancel</a>
-    </div>
-}
+        <a class="btn" asp-route="@StaticNames.ListIndex">Cancel</a>
+        <button class="btn" type="submit">Create List</button>
+    </div> 
+</form>

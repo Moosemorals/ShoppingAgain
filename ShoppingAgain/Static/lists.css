@@ -1,16 +1,18 @@
 ﻿
 dl {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row;
+    align-items: center;
 }
 
 dt {
-    flex-basis: 20%;
+    justify-self: flex-end;
+    flex-basis: 35%;
     padding: var(--small-padding);
     font-weight: bold;
 }
 dd {
-    flex-basis: 70%;
+    flex-basis: 65%;
     flex-grow: 1;
     padding: var(--small-padding);
 }

@@ -35,14 +35,14 @@
             <tr id="@i.ID">
                 <td>@i.Name</td>
                 <td class="controls">
-                    <form method="post" action="@Url.RouteUrl("ItemNextState", new { listId = current.ID, itemId = i.ID })">
+                    <form method="post" asp-route="@StaticNames.ItemNextState" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
                         <button class="state" type="submit"><state s="@i.State"></button>
                     </form>
-                    <form method="post" action="@Url.RouteUrl("ItemDelete", new { listId = current.ID, itemId = i.ID })">
-                        <button class="state" type="submit"><icon src="~/images/trash.svg"></button>
-                    </form>
-                    <form method="post" action="@Url.RouteUrl("ItemEdit", new { listId = current.ID, itemId = i.ID })">
+                    <form method="post" asp-route="@StaticNames.ItemChangeName" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
                         <button class="state" type="submit"><icon src="~/images/edit.svg"></button>
+                    </form>
+                    <form method="post" asp-route="@StaticNames.ItemDelete" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
+                        <button class="state" type="submit"><icon src="~/images/trash.svg"></button>
                     </form>
                 </td>
             </tr>
@@ -54,18 +54,18 @@
                 <input form="ItemCreate" name="name" placeholder="New Item Name" required />
             </td>
             <td>
-                <form id="ItemCreate" method="post" action="@Url.RouteUrl("ItemCreate", new { listId = current.ID })">
+                <form id="ItemCreate" method="post" asp-route="@StaticNames.ItemCreate" asp-route-listId="@Model.ID">
                     <button type="submit">Add Item</button>
                 </form>
-
-
             </td>
         </tr>
 
     </tfoot>
 </table>
 <p>
-    <a href="@Url.RouteUrl("ListEdit", new { listId = current.ID })">Change the name of the list</a>
+    <a href="@Url.RouteUrl(StaticNames.ListEdit, new { listId = current.ID })">Change the name of the list</a>
+    |
+    <a href="@Url.RouteUrl(StaticNames.ListDelete, new { listId = current.ID })">Delete this list</a>
 </p>
 @section scripts  {
     <script nonce="@ViewBag.Nonce">

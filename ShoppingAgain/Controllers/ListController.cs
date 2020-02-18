@@ -32,8 +32,8 @@ namespace ShoppingAgain
             return View();
         }
 
-        [HttpGet("{listId}", Name = "Selected")]
-        public IActionResult Selected(Guid listId)
+        [HttpGet("{listId}", Name = "ListDetails")]
+        public IActionResult Details(Guid listId)
         {
             ShoppingList current = lists.Get(listId);
             if (current == null)
@@ -53,14 +53,14 @@ namespace ShoppingAgain
             return View();
         }
 
-        [HttpPost("new")]
+        [HttpPost("new"), ValidateAntiForgeryToken]
         public IActionResult Create([Bind("Name")]ShoppingList fromUser)
         {
             if (ModelState.IsValid)
             {
                 ShoppingList created = lists.CreateList(fromUser);
                 Message("The list '{0}' has been created", created.Name);
-                return RedirectToRoute("Selected", new { listId = created.ID });
+                return RedirectToRoute(StaticNames.ListDetails, new { listId = created.ID });
             }
 
             ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
@@ -81,7 +81,7 @@ namespace ShoppingAgain
             return RedirectToRoute("ListIndex");
         }
 
-        [HttpPost("{listId:Guid}/Edit")]
+        [HttpPost("{listId:Guid}/Edit"), ValidateAntiForgeryToken]
         public IActionResult Edit([Bind("ID, Name")]ShoppingList fromUser)
         {
             if (ModelState.IsValid)
@@ -104,19 +104,20 @@ namespace ShoppingAgain
             return View(fromUser);
         }
 
-        [HttpGet("{id:Guid}/Delete", Name = "ListDelete")]
-        public IActionResult Delete(Guid id)
+        [HttpGet("{listId:Guid}/Delete", Name = "ListDelete")]
+        public IActionResult Delete(Guid listId)
         {
-            ShoppingList list = lists.Get(id);
+            ShoppingList list = lists.Get(listId);
             if (list != null)
             {
                 ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
                 return View(list);
             }
-            return NotFound();
+            Message("CAn't find list to deltete");
+            return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
         }
 
-        [HttpPost("{listId:Guid}/Delete")]
+        [HttpPost("{listId:Guid}/Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid listId)
         {
             ShoppingList list = lists.Get(listId);

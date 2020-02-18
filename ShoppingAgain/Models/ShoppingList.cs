@@ -13,12 +13,11 @@ namespace ShoppingAgain.Models
         [Key]
         public Guid ID { get; set; }
 
-        [Required]
+        [Required, Display(Name = "List Name")]
         public string Name { get; set; }
 
         public virtual ICollection<Item> Items { get; set; }
 
-        [Display(Name = "Items")]
         public int Count {  get { return Items.Count; } }
     }
 }

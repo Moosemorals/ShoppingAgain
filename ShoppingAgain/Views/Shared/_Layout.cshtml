@@ -1,6 +1,4 @@
-﻿@using ShoppingAgain.Classes
-@using ShoppingAgain.Models
-@model ShoppingList
+﻿@model ShoppingList
 @{
     Layout = null;
     string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
@@ -44,7 +42,7 @@
             @foreach (ShoppingList l in ViewBag.Lists)
             {
                 bool hl = hasList && l.ID == Model.ID;
-                <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl("Selected", new { listId = l.ID })">@l.Name</a></li>
+                <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
             }
         </ul>
 
@@ -56,7 +54,4 @@
     <script defer type="module" src="~/static/shopping.min.js"></script>
 </body>
 </html>
-
-
-
-
+ 

@@ -19,6 +19,6 @@
 
     <div id="page-controls">
         <button class="btn" type="submit">Save Changes</button>
-        <a class="btn" href="@Url.RouteUrl("ListSelected", new { listId = current.ID })">Cancel</a>
+        <a class="btn" href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = current.ID })">Cancel</a>
     </div>
 }
