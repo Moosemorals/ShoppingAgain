@@ -12,6 +12,7 @@ namespace ShoppingAgain.Contexts
     {
         public DbSet<ShoppingList> ShoppingLists { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -25,8 +26,23 @@ namespace ShoppingAgain.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ShoppingList>().ToTable("ShoppingLists");
+            modelBuilder.Entity<ShoppingList>()
+                .ToTable("ShoppingLists");
             modelBuilder.Entity<Item>().ToTable("Items");
+
+            Password password = Password.Generate("demo");
+            password.ID = Guid.NewGuid();
+
+            modelBuilder.Entity<Password>()
+                .ToTable("Password")
+                .HasData(password);
+            modelBuilder.Entity<User>()
+                .ToTable("Users")
+                .HasData(new User {
+                    ID = Guid.NewGuid(),
+                    Name = "Anonymous",
+                    PasswordID = password.ID,
+                });
         }
     }
 }

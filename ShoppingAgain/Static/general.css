@@ -98,3 +98,10 @@ button.state {
             #lists li a:hover {
                 font-size: 140%;
             }
+
+header {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-content: flex-start;
+}

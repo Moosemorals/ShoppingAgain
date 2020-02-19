@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shopping List: @ViewBag.Title</title>
+    <link rel="icon" type="image/svg" href="~/images/icon.svg" />
+    <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" />
+</head>
+<body>
+    <header id="title">
+        <h1>Shopping List: @ViewBag.Title</h1>
+    </header>
+    <main>
+        @if (TempData.ContainsKey(StaticNames.Message))
+        {
+            <section id="message">
+                <div>
+                    @TempData[StaticNames.Message]
+                </div>
+            </section>
+        }
+        <section id="content">
+            @RenderBody()
+        </section>
+    </main>
+    <aside>
+        <!-- This space intentionaly left blank -->
+    </aside>
+</body>
+</html>

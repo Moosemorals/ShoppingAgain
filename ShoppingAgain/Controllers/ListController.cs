@@ -28,10 +28,10 @@ namespace ShoppingAgain
 
         [HttpGet("", Name = "ListIndex")]
         [Route("/")] // This is also our default route
-        [Authorize(Roles = "visitor")]
+        [Authorize]
         public IActionResult Index()
         {
-            ViewBag.User = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+            ViewBag.User = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
             ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View();
         }

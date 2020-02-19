@@ -1,16 +1,15 @@
-﻿
+﻿@model LoginVM
 @{
     ViewData["Title"] = "Login";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_Layout.cshtml";
 }
-
-<h1>Login</h1>
-
-<form asp-action="Login" method="post">
-    @if (ViewBag.ReturnUrl != null)
-    {
-        <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
-    }
-    <input name="name" type="text" />
-    <button type="submit">Login</button>
+<form asp-action="Login" method="post" autocomplete="off">
+    <input asp-for="ReturnUrl" />
+    <dl>
+        <dt><label asp-for="Username"></label></dt>
+        <dd><input asp-for="Username" /></dd>
+        <dt><label asp-for="Password"></label></dt>
+        <dd><input asp-for="Password" /></dd>
+    </dl>
+    <div><button type="submit">Login</button></div>
 </form>

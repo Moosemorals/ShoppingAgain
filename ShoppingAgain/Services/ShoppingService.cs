@@ -123,5 +123,21 @@ namespace ShoppingAgain.Services
             _db.SaveChanges();
             _events.ItemDeleted(list.ID, item.ID);
         }
+
+        public User ValidateLogin(LoginVM login)
+        {
+            User u =_db.Users
+                .Include("Password")
+                .FirstOrDefault(u => u.Name == login.Username);
+
+            if (u == null || !u.Password.Validate(login.Password))
+            {
+                // todo: Event login failed
+                return null;
+            }
+
+            // todo: Event login succeeded
+            return u;
+        }
     }
 }

@@ -18,10 +18,7 @@
 <body>
     <header id="title">
         <h1>@_title</h1>
-        @if (ViewBag.User != null)
-        {
-            <p>Hello @ViewBag.User</p>
-        }
+        <div>Hello @ViewBag.User (<form asp-route="UserLogout"><button class="btn">Logout</button></form>)</div>
     </header>
 
     <main>
