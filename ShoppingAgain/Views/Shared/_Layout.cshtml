@@ -18,6 +18,10 @@
 <body>
     <header id="title">
         <h1>@_title</h1>
+        @if (ViewBag.User != null)
+        {
+            <p>Hello @ViewBag.User</p>
+        }
     </header>
 
     <main>
@@ -36,22 +40,25 @@
     </main>
 
     <aside>
-        <p>Click on the name of a list below to make that list active</p>
-        <ul id="lists">
-            <li id="lists-li-template" hidden><a href=""></a></li>
-            @foreach (ShoppingList l in ViewBag.Lists)
-            {
-                bool hl = hasList && l.ID == Model.ID;
-                <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
-            }
-        </ul>
+        @if (ViewBag.Lists != null)
+        {
+            <p>Click on the name of a list below to make that list active</p>
+            <ul id="lists">
+                <li id="lists-li-template" hidden><a href=""></a></li>
+                @foreach (ShoppingList l in ViewBag.Lists)
+                {
+                    bool hl = hasList && l.ID == Model.ID;
+                    <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
+                }
+            </ul>
+        }
 
         <p><a href="@Url.RouteUrl("ListCreate")">Create a list</a></p>
     </aside>
 
-    @RenderSection("scripts",  false)
+    @RenderSection("scripts", false)
 
     <script defer type="module" src="~/static/shopping.min.js"></script>
 </body>
 </html>
- 
+

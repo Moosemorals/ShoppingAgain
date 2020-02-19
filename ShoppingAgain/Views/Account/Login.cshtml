@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Login</h1>
+
+<form asp-action="Login" method="post">
+    @if (ViewBag.ReturnUrl != null)
+    {
+        <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+    }
+    <input name="name" type="text" />
+    <button type="submit">Login</button>
+</form>

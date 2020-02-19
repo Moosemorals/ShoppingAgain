@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,7 +39,7 @@ namespace ShoppingAgain
             using var eventsDB = new EventContext();
             eventsDB.Database.EnsureCreated();
             eventsDB.Database.Migrate();
-        } 
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -48,6 +49,11 @@ namespace ShoppingAgain
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<EventService, EventService>();
             services.AddScoped<ShoppingService>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                        .AddCookie();
+
+            services.AddHttpContextAccessor();
 
             // Setup MVC
             IMvcBuilder builder = services.AddMvc(options => options.EnableEndpointRouting = false);
@@ -86,6 +92,9 @@ namespace ShoppingAgain
                 ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'nonce-" + n + "';");
                 await next();
             });
+
+            // Add authentication
+            app.UseAuthentication();
 
             // Serve static files from wwwroot
             app.UseStaticFiles();

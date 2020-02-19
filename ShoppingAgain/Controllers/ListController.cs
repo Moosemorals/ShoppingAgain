@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -26,8 +28,10 @@ namespace ShoppingAgain
 
         [HttpGet("", Name = "ListIndex")]
         [Route("/")] // This is also our default route
+        [Authorize(Roles = "visitor")]
         public IActionResult Index()
         {
+            ViewBag.User = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
             ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View();
         }
