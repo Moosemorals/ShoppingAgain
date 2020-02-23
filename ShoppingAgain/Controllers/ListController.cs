@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -12,11 +13,11 @@ using ShoppingAgain.Database;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
 
-namespace ShoppingAgain
+namespace ShoppingAgain.Controllers
 {
 
     [Route("l"), Authorize(Roles = "User")]
-    public class ListController : Controller
+    public class ListController : ShoppingBaseController
     {
         private readonly ShoppingService lists;
 
@@ -38,10 +39,11 @@ namespace ShoppingAgain
         [HttpGet("{listId}", Name = "ListDetails")]
         public IActionResult Details(Guid listId)
         {
-            ShoppingList current = lists.Get(listId);
+            ShoppingList current = lists.Get(GetUser(), listId);
             if (current == null)
             {
-                return NotFound();
+                Message("Can't find requested list");
+                return RedirectToRoute(StaticNames.ListIndex);
             }
 
             return View(current);
@@ -54,11 +56,11 @@ namespace ShoppingAgain
         }
 
         [HttpPost("new"), ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("Name")]ShoppingList fromUser)
+        public IActionResult Create([Bind("Name")]ListEditVM fromUser)
         {
             if (ModelState.IsValid)
             {
-                ShoppingList created = lists.CreateList(fromUser);
+                ShoppingList created = lists.CreateList(GetUser(), fromUser.Name);
                 Message("The list '{0}' has been created", created.Name);
                 return RedirectToRoute(StaticNames.ListDetails, new { listId = created.ID });
             }
@@ -69,7 +71,7 @@ namespace ShoppingAgain
         [HttpGet("{listId:Guid}/Edit", Name = "ListEdit")]
         public IActionResult Edit(Guid listId)
         {
-            ShoppingList current = lists.Get(listId);
+            ShoppingList current = lists.Get(GetUser(), listId);
             if (current != null)
             {
                 return View(current);
@@ -84,7 +86,7 @@ namespace ShoppingAgain
         {
             if (ModelState.IsValid)
             {
-                ShoppingList list = lists.Get(fromUser.ID);
+                ShoppingList list = lists.Get(GetUser(), fromUser.ID);
                 if (list == null)
                 {
                     Message("Couldn't find list to edit");
@@ -104,7 +106,7 @@ namespace ShoppingAgain
         [HttpGet("{listId:Guid}/Delete", Name = "ListDelete")]
         public IActionResult Delete(Guid listId)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(), listId);
             if (list != null)
             {
                 return View(list);
@@ -116,7 +118,7 @@ namespace ShoppingAgain
         [HttpPost("{listId:Guid}/Delete"), ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid listId)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(), listId);
             if (list != null)
             {
                 lists.DeleteList(list);
@@ -169,9 +171,5 @@ namespace ShoppingAgain
             }
         }
 
-        private void Message(string format, params object[] args)
-        {
-            TempData.Add(StaticNames.Message, string.Format(format, args));
-        }
     }
 }

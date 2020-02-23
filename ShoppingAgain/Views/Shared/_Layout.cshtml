@@ -31,15 +31,8 @@
     </header>
 
     <main>
-        @if (TempData.ContainsKey(StaticNames.Message))
-        {
-            <section id="message">
-                <div>
-                    @TempData[StaticNames.Message]
-                </div>
-            </section>
-        }
-        <section id="content">
+        <partial name="_Messages" model="TempData[StaticNames.Message]"/>
+       <section id="content">
             @RenderBody()
         </section>
 

@@ -9,7 +9,7 @@ using ShoppingAgain.Models;
 namespace ShoppingAgain.Controllers
 {
     [Route("l/{listId:Guid}/items"), Authorize(Roles = "User")]
-    public class ItemController : Controller
+    public class ItemController : ShoppingBaseController
     {
         private readonly ShoppingService lists;
 
@@ -21,7 +21,7 @@ namespace ShoppingAgain.Controllers
         [HttpPost("new", Name = "ItemCreate"), ValidateAntiForgeryToken]
         public IActionResult Create(Guid listId, [Bind("Name")]Item fromUser)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(), listId);
             if (list == null)
             {
                 return NotFound();
@@ -42,7 +42,7 @@ namespace ShoppingAgain.Controllers
         [HttpPost("{itemId:Guid}/delete", Name = "ItemDelete"), ValidateAntiForgeryToken]
         public ActionResult Delete(Guid listId, Guid itemId)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(), listId);
             if (list == null)
             {
                 return NotFound();
@@ -62,7 +62,7 @@ namespace ShoppingAgain.Controllers
         [HttpPost("{itemId:Guid}/state", Name = "ItemNextState"), ValidateAntiForgeryToken]
         public ActionResult NextState(Guid listId, Guid itemId)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(), listId);
             if (list == null)
             {
                 return NotFound();
@@ -84,7 +84,7 @@ namespace ShoppingAgain.Controllers
         [HttpPost("{itemId:Guid}/state/{state}", Name = "ItemChangeState"), ValidateAntiForgeryToken]
         public ActionResult ChangeState(Guid listId, Guid itemId, ItemState newState = ItemState.Unknown)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(), listId);
             if (list == null)
             {
                 Message("Can't find the list you asked for");
@@ -114,7 +114,7 @@ namespace ShoppingAgain.Controllers
         [HttpGet("{itemId:Guid}/edit", Name = "ItemChangeName")]
         public IActionResult EditItem(Guid listId, Guid itemId)
         {
-            ShoppingList list = lists.Get(listId);
+            ShoppingList list = lists.Get(GetUser(),listId);
             if (list == null)
             {
                 Message("Can't find the list you asked for");
@@ -129,11 +129,6 @@ namespace ShoppingAgain.Controllers
             }
 
             return View(new ItemEditVM { ItemID = item.ID, Parent = list, Name = list.Name });
-        }
-
-        private void Message(string format, params object[] args)
-        {
-            TempData.Add(StaticNames.Message, string.Format(format, args));
         }
 
     }

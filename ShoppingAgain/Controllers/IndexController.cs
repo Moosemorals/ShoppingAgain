@@ -5,7 +5,7 @@ using ShoppingAgain.Models;
 namespace ShoppingAgain.Controllers
 {
 
-    public class IndexController : Controller
+    public class IndexController : ShoppingBaseController
     {
 
         [HttpGet("/", Name = "TopIndex")]

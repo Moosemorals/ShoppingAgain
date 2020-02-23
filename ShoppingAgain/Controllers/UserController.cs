@@ -10,7 +10,7 @@ using ShoppingAgain.Models;
 
 namespace ShoppingAgain.Controllers
 {
-    public class UserController : Controller
+    public class UserController : ShoppingBaseController
     {
         private readonly ShoppingService _lists;
 
@@ -74,11 +74,5 @@ namespace ShoppingAgain.Controllers
         {
             return View();
         }
-
-        private void Message(string format, params object[] args)
-        {
-            TempData.Add(StaticNames.Message, string.Format(format, args));
-        }
-
     }
 }

@@ -1,0 +1,11 @@
+﻿@model string[]
+
+@if (Model != null)
+{
+    <section class="message-holder">
+        @foreach (string msg in Model)
+        {
+        <div class="message">@msg</div>
+        }
+    </section>
+}

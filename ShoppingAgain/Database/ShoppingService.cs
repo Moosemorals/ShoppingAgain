@@ -28,13 +28,6 @@ namespace ShoppingAgain.Database
             _events.ShoppingEvents -= handler;
         }
 
-        public IEnumerable<ShoppingList> GetAll()
-        {
-            return _db.ShoppingLists
-                .Include(x => x.Items)
-                .Where(x => true);
-        }
-
         public User GetUser(string idString)
         {
             return GetUser(Guid.Parse(idString));
@@ -53,26 +46,26 @@ namespace ShoppingAgain.Database
                 .FirstOrDefault(u => u.ID == userId);
         }
 
-        public ShoppingList Get(Guid listId)
+        public ShoppingList Get(User user, Guid listId)
         {
             return _db.ShoppingLists
-                .Include(x => x.Items)
-                .FirstOrDefault(x => x.ID == listId);
+                .Include("Items")
+                .Include("Users")
+                .FirstOrDefault(x => x.ID == listId && x.Users.Any(ul => ul.UserId == user.ID));
         }
 
-        public bool Exists(Guid listId)
+        public ShoppingList CreateList(User user, string name)
         {
-            return _db.ShoppingLists.Any(l => l.ID == listId);
-        }
-
-        public bool ExistsByName(string name)
-        {
-            return _db.ShoppingLists.Any(l => l.Name == name);
-        }
-
-        public ShoppingList CreateList(ShoppingList list)
-        {
+            ShoppingList list = new ShoppingList
+            {
+                Name = name,
+                Users = new List<UserList>(),
+            };
             _db.ShoppingLists.Add(list);
+            UserList ul = new UserList { ListId = list.ID, UserId = user.ID };
+            _db.UserLists.Add(ul);
+            user.CurrentList = list;
+            _db.Users.Update(user);
             _db.SaveChanges();
             _events.ListCreated(list.ID, list.Name);
             return list;
@@ -89,7 +82,7 @@ namespace ShoppingAgain.Database
             return list;
         }
 
-        internal void DeleteList(ShoppingList list)
+        public void DeleteList(ShoppingList list)
         {
             _db.ShoppingLists.Remove(list);
             _db.SaveChanges();

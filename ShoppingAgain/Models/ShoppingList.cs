@@ -16,7 +16,6 @@ namespace ShoppingAgain.Models
 
         public virtual ICollection<Item> Items { get; set; }
 
-        [Required]
         public virtual ICollection<UserList> Users { get; set; }
 
         public int Count {  get { return Items.Count; } }
