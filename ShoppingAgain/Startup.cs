@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,15 +9,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ShoppingAgain.Contexts;
+using ShoppingAgain.Classes;
+using ShoppingAgain.Database;
 using ShoppingAgain.Events;
-using ShoppingAgain.Services;
+using ShoppingAgain.Middleware;
 
 namespace ShoppingAgain
 {
     public class Startup
     {
-        private static RNGCryptoServiceProvider RNG = new RNGCryptoServiceProvider();
+        private static readonly RNGCryptoServiceProvider RNG = new RNGCryptoServiceProvider();
 
         public IConfiguration Configuration { get; }
 
@@ -48,11 +45,25 @@ namespace ShoppingAgain
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<EventService, EventService>();
+
             services.AddScoped<ShoppingService>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                        .AddCookie();
+                        .AddCookie(options =>
+            {
+                options.LoginPath = StaticNames.UserLoginPath;
+                options.AccessDeniedPath = StaticNames.UserDeniedPath;
+                options.LogoutPath = StaticNames.UserLogoutPath;
 
+                options.Cookie = new CookieBuilder
+                {
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Strict,
+                    IsEssential = true,
+
+                };
+                options.SlidingExpiration = true;
+            });
             services.AddHttpContextAccessor();
 
             // Setup MVC
@@ -84,6 +95,9 @@ namespace ShoppingAgain
                 app.UseDeveloperExceptionPage();
             }
 
+            // Add authentication
+            app.UseAuthentication();
+
             // Add CSP header
             app.Use(async (ctx, next) =>
             {
@@ -93,8 +107,7 @@ namespace ShoppingAgain
                 await next();
             });
 
-            // Add authentication
-            app.UseAuthentication();
+            app.UseMiddleware<ListsMiddleware>();
 
             // Serve static files from wwwroot
             app.UseStaticFiles();

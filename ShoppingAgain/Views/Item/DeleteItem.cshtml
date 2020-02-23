@@ -1,0 +1,18 @@
+﻿@model ItemEditVM
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-route="@StaticNames.ItemDelete" asp-route-listId="@Model.Parent.ID" asp-route-itemId="@Model.ItemID" method="post">
+    <h2>Are you sure?</h2>
+
+    <p>Are you sure you want to delete @Model.Name from @Model.Parent.Name?</p>
+
+    <p>
+        <button type="submit">Delete</button>
+        <a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = Model.Parent.ID })">Cancel</a>
+    </p>
+
+</form>
+

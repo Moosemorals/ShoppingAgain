@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ShoppingAgain.Events
+﻿namespace ShoppingAgain.Events
 {
     public class SSEvent
     {

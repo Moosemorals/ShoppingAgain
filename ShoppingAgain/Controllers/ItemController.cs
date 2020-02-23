@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
+using ShoppingAgain.Database;
 using ShoppingAgain.Models;
-using ShoppingAgain.Services;
 
 namespace ShoppingAgain.Controllers
 {
-    [Route("l/{listId:Guid}/items")]
+    [Route("l/{listId:Guid}/items"), Authorize(Roles = "User")]
     public class ItemController : Controller
     {
         private readonly ShoppingService lists;
@@ -69,14 +68,14 @@ namespace ShoppingAgain.Controllers
                 return NotFound();
             }
 
-            Item item = list.Items.FirstOrDefault(i => i.ID == itemId);
+            Item item = lists.GetItem(list, itemId);
             if (item == null)
             {
                 return NotFound();
             }
 
             ItemState prev = item.State;
-            lists.ChangeItemState(list, item, item.State.Next()); 
+            lists.ChangeItemState(list, item, item.State.Next());
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
             return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
@@ -88,13 +87,15 @@ namespace ShoppingAgain.Controllers
             ShoppingList list = lists.Get(listId);
             if (list == null)
             {
-                return NotFound();
+                Message("Can't find the list you asked for");
+                return RedirectToRoute(StaticNames.ListIndex);
             }
 
-            Item item = list.Items.FirstOrDefault(i => i.ID == itemId);
+            Item item = lists.GetItem(list, itemId);
             if (item == null)
             {
-                return NotFound();
+                Message("Can't find the item you asked for");
+                return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
             }
 
             if (newState == ItemState.Unknown)
@@ -108,7 +109,27 @@ namespace ShoppingAgain.Controllers
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
             return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
-        } 
+        }
+
+        [HttpGet("{itemId:Guid}/edit", Name = "ItemChangeName")]
+        public IActionResult EditItem(Guid listId, Guid itemId)
+        {
+            ShoppingList list = lists.Get(listId);
+            if (list == null)
+            {
+                Message("Can't find the list you asked for");
+                return RedirectToRoute(StaticNames.ListIndex);
+            }
+
+            Item item = lists.GetItem(list, itemId);
+            if (item == null)
+            {
+                Message("Can't find the item you asked for");
+                return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+            }
+
+            return View(new ItemEditVM { ItemID = item.ID, Parent = list, Name = list.Name });
+        }
 
         private void Message(string format, params object[] args)
         {

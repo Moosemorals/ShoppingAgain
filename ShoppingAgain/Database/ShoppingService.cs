@@ -1,15 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ShoppingAgain.Contexts;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace ShoppingAgain.Services
+namespace ShoppingAgain.Database
 {
-    public class ShoppingService
+    public class ShoppingService : IDisposable
     {
         private readonly ShoppingContext _db;
         private readonly EventService _events;
@@ -37,23 +35,37 @@ namespace ShoppingAgain.Services
                 .Where(x => true);
         }
 
-        public ShoppingList Get(Guid id)
+        public User GetUser(string idString)
+        {
+            return GetUser(Guid.Parse(idString));
+        }
+
+        public User GetUser(Guid userId)
+        {
+            return _db.Users.Find(userId);
+        }
+
+        public IEnumerable<ShoppingList> Get(string userIdString)
+        {
+            User user = GetUser(userIdString);
+            if (user == null)
+            {
+                // Probably shouldn't happen
+                throw new ArgumentException("Can't find user with id " + userIdString);
+            }
+            return user.Lists.Select(ul => ul.List);
+        }
+
+        public ShoppingList Get(Guid listId)
         {
             return _db.ShoppingLists
                 .Include(x => x.Items)
-                .FirstOrDefault(x => x.ID == id);
+                .FirstOrDefault(x => x.ID == listId);
         }
 
-        public ShoppingList Get(string name)
+        public bool Exists(Guid listId)
         {
-            return _db.ShoppingLists
-                .Include(x => x.Items)
-                .FirstOrDefault(x => x.Name == name);
-        }
-
-        public bool Exists(Guid id)
-        {
-            return _db.ShoppingLists.Any(l => l.ID == id);
+            return _db.ShoppingLists.Any(l => l.ID == listId);
         }
 
         public bool ExistsByName(string name)
@@ -114,7 +126,12 @@ namespace ShoppingAgain.Services
             ItemState oldState = item.State;
             item.State = newState;
             _db.SaveChanges();
-            _events.ItemStateChanged(list.ID, item.ID,oldState, newState);
+            _events.ItemStateChanged(list.ID, item.ID, oldState, newState);
+        }
+
+        internal Item GetItem(ShoppingList list, Guid itemId)
+        {
+            return list.Items.FirstOrDefault(i => i.ID == itemId);
         }
 
         public void RemoveItem(ShoppingList list, Item item)
@@ -126,18 +143,42 @@ namespace ShoppingAgain.Services
 
         public User ValidateLogin(LoginVM login)
         {
-            User u =_db.Users
+            User u = _db.Users
                 .Include("Password")
+                .Include("UserRoles")
+                .Include("UserRoles.Role")
                 .FirstOrDefault(u => u.Name == login.Username);
 
-            if (u == null || !u.Password.Validate(login.Password))
+            if (u == null)
             {
-                // todo: Event login failed
+                _events.UserNotFound(login.Username);
                 return null;
             }
 
-            // todo: Event login succeeded
+            if (!u.Password.Validate(login.Password))
+            {
+                _events.LoginFailed(u);
+                return null;
+            }
+
+            _events.LoginSuccesfull(u);
             return u;
         }
+
+        #region IDisposable Support
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

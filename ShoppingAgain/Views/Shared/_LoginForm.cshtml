@@ -1,9 +1,6 @@
-﻿@model LoginVM
-@{
-    ViewData["Title"] = "Login";
-    Layout = "_Layout.cshtml";
-}
-<form asp-action="Login" method="post" autocomplete="off">
+﻿
+@model LoginVM
+<form asp-route="@StaticNames.UserLogin" method="post" autocomplete="off">
     <input asp-for="ReturnUrl" />
     <dl>
         <dt><label asp-for="Username"></label></dt>
@@ -13,3 +10,4 @@
     </dl>
     <div><button type="submit">Login</button></div>
 </form>
+

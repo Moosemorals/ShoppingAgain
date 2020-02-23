@@ -1,0 +1,17 @@
+﻿@model ItemEditVM
+@{
+    ViewData["Title"] = "Change Item Name";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Controls</th>
+        </tr>
+    </thead>
+    <tbody>
+        <partial name="_ItemEdit" model="Model" />
+    </tbody>
+</table>

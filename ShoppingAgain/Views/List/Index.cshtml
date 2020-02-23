@@ -1,9 +1,7 @@
-﻿@using  ShoppingAgain.Models;
-
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.title = "Your Shopping Lists";
 }
 
 <h2>Welcome to Shopping List!</h2>
-<p>Please use the menu on the left to select a list, or you can <a href="@Url.RouteUrl("ListCreate")">create a list</a>.</p>
+<p>Please use the menu on the left to select a list, or you can <a href="@Url.RouteUrl(StaticNames.ListCreate)">create a list</a>.</p>

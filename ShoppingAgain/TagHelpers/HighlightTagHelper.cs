@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 
 namespace ShoppingAgain.TagHelpers
 {

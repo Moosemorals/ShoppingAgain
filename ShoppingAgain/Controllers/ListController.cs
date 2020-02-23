@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -9,14 +8,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ShoppingAgain.Classes;
+using ShoppingAgain.Database;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
-using ShoppingAgain.Services;
 
 namespace ShoppingAgain
 {
 
-    [Route("l")]
+    [Route("l"),Authorize(Roles = "User")]
     public class ListController : Controller
     {
         private readonly ShoppingService lists;
@@ -27,8 +26,6 @@ namespace ShoppingAgain
         }
 
         [HttpGet("", Name = "ListIndex")]
-        [Route("/")] // This is also our default route
-        [Authorize]
         public IActionResult Index()
         {
             ViewBag.User = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;

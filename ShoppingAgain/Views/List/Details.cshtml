@@ -36,30 +36,21 @@
                 <td>@i.Name</td>
                 <td class="controls">
                     <form method="post" asp-route="@StaticNames.ItemNextState" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
-                        <button class="state" type="submit"><state s="@i.State"></button>
+                        <button class="state" type="submit"><state s="@i.State">@i.State</button>
                     </form>
-                    <form method="post" asp-route="@StaticNames.ItemChangeName" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
-                        <button class="state" type="submit"><icon src="~/images/edit.svg"></button>
-                    </form>
-                    <form method="post" asp-route="@StaticNames.ItemDelete" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
-                        <button class="state" type="submit"><icon src="~/images/trash.svg"></button>
-                    </form>
+                    <a href="@Url.RouteUrl(StaticNames.ItemChangeName, new { listId = Model.ID, itemId = i.ID })">
+                        <icon src="~/images/edit.svg">
+                    </a>
+
+                    <a href="@Url.RouteUrl(StaticNames.ItemDelete, new { listId = Model.ID, itemId = i.ID })">
+                        <icon src="~/images/trash.svg">
+                    </a>
                 </td>
             </tr>
         }
     </tbody>
     <tfoot>
-        <tr id="list-controls">
-            <td>
-                <input form="ItemCreate" name="name" placeholder="New Item Name" required />
-            </td>
-            <td>
-                <form id="ItemCreate" method="post" asp-route="@StaticNames.ItemCreate" asp-route-listId="@Model.ID">
-                    <button type="submit">Add Item</button>
-                </form>
-            </td>
-        </tr>
-
+        <partial name="_ItemEdit" model="new ItemEditVM { Parent = current, Route = StaticNames.ItemCreate }" />
     </tfoot>
 </table>
 <p>

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace ShoppingAgain.Models
 {
@@ -17,24 +14,22 @@ namespace ShoppingAgain.Models
     {
         Unknown,
         Wanted,
+        [Display(Name = "In Basket")]
         Basket,
         Bought
     }
 
-    public static class ItemStateMethods {
+    public static class ItemStateMethods
+    {
         public static ItemState Next(this ItemState s)
         {
-            switch (s)
+            return s switch
             {
-                case ItemState.Basket:
-                    return ItemState.Bought;
-                case ItemState.Bought:
-                    return ItemState.Wanted;
-                case ItemState.Wanted:
-                    return ItemState.Basket;
-                default:
-                    return ItemState.Unknown;
-            }
-        }
+                ItemState.Basket => ItemState.Bought,
+                ItemState.Bought => ItemState.Wanted,
+                ItemState.Wanted => ItemState.Basket,
+                _ => ItemState.Unknown,
+            };
+        } 
     }
 }

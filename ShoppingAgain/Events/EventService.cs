@@ -4,7 +4,6 @@ using ShoppingAgain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShoppingAgain.Events
 {
@@ -50,6 +49,25 @@ namespace ShoppingAgain.Events
         {
             SendEvent(listId, new ItemDeletedEvent(listId, itemId));
         }
+        public void UserNotFound(string username)
+        {
+            SendEvent(Guid.Empty, new UserNotFoundEvent(username));
+        }
+
+        public void LoginFailed(User user)
+        {
+            SendEvent(user.ID, new UserLoginFailedEvent(user.ID));
+        }
+
+        public void LoginSuccesfull(User user)
+        {
+            SendEvent(user.ID, new UserLoginSucceededEvent(user.ID));
+        }
+
+        public void UserCreated(User user)
+        {
+            SendEvent(user.ID, new UserCreatedEvent(user.ID, user.Name));
+        }
 
         private void SendEvent(Guid EventSource, ShoppingEvent e)
         {
@@ -70,7 +88,7 @@ namespace ShoppingAgain.Events
 
             foreach (DBEvent e in events)
             {
-                ShoppingEvent se = JsonConvert.DeserializeObject<ShoppingEvent>(e.Payload);
+                ShoppingListEvent se = JsonConvert.DeserializeObject<ShoppingListEvent>(e.Payload);
                 SendEvent(ListId, se);
             }
         }
@@ -104,23 +122,77 @@ namespace ShoppingAgain.Events
             _db.EventLog.Add(e);
             _db.SaveChanges();
         }
-    }
 
+    }
 
     public abstract class ShoppingEvent
     {
         [JsonConverter(typeof(StringEnumConverter)), JsonProperty("eventType")]
         public ShoppingEventType Type { get; }
-        [JsonProperty("listId")]
-        public Guid ListId { get; }
-        public ShoppingEvent(ShoppingEventType type, Guid listId)
+
+        public ShoppingEvent(ShoppingEventType type)
         {
             Type = type;
+        }
+    }
+
+    public abstract class ShoppingUserEvent : ShoppingEvent
+    {
+        [JsonProperty("userId")]
+        public Guid UserId { get; }
+        public ShoppingUserEvent(ShoppingEventType type, Guid userId) : base(type) {
+            UserId = userId;
+        }
+    }
+
+    public class UserCreatedEvent : ShoppingUserEvent
+    {
+        [JsonProperty("username")]
+        public string Username { get; }
+
+        public UserCreatedEvent(Guid userId, string username) : base(ShoppingEventType.UserCreated, userId)
+        {
+            Username = username;
+        }
+    }
+
+    public class UserNotFoundEvent : ShoppingUserEvent
+    {
+        public UserNotFoundEvent(string username) : base(ShoppingEventType.UserNotFound, Guid.Empty)
+        {
+            Username = username;
+        }
+
+        [JsonProperty("username")]
+        public string Username { get; }
+    }
+
+    public class UserLoginFailedEvent : ShoppingUserEvent
+    {
+        public UserLoginFailedEvent(Guid UserId) : base(ShoppingEventType.UserLoginFailed, UserId) { }
+    }
+
+    public class UserLoginSucceededEvent : ShoppingUserEvent
+    {
+        public UserLoginSucceededEvent(Guid UserId) : base(ShoppingEventType.UserLogin, UserId) { }
+    }
+
+    public class UserLogoutEvent : ShoppingUserEvent
+    { 
+        public UserLogoutEvent(Guid UserId) : base(ShoppingEventType.UserLogout, UserId) { }
+    }
+
+    public abstract class ShoppingListEvent : ShoppingEvent
+    {
+        [JsonProperty("listId")]
+        public Guid ListId { get; }
+        public ShoppingListEvent(ShoppingEventType type, Guid listId) : base(type)
+        {
             ListId = listId;
         }
     }
 
-    public class ListCreatedEvent : ShoppingEvent
+    public class ListCreatedEvent : ShoppingListEvent
     {
         [JsonProperty("listName")]
         public string Name { get; }
@@ -130,7 +202,7 @@ namespace ShoppingAgain.Events
         }
     }
 
-    public class ListRenamedEvent : ShoppingEvent
+    public class ListRenamedEvent : ShoppingListEvent
     {
         [JsonProperty("oldListName")]
         public string OldName { get; }
@@ -139,18 +211,18 @@ namespace ShoppingAgain.Events
         public ListRenamedEvent(Guid listId, string oldName, string newName) : base(ShoppingEventType.ListRenamed, listId)
         {
             OldName = oldName;
-            NewName = NewName;
+            NewName = newName;
         }
     }
 
-    public class ListDeletedEvent : ShoppingEvent
+    public class ListDeletedEvent : ShoppingListEvent
     {
         public ListDeletedEvent(Guid listId) : base(ShoppingEventType.ListDeleted, listId)
         {
         }
     }
 
-    public abstract class ItemEvent : ShoppingEvent
+    public abstract class ItemEvent : ShoppingListEvent
     {
         [JsonProperty("itemId")]
         public Guid ItemId { get; }
@@ -209,12 +281,24 @@ namespace ShoppingAgain.Events
 
     public enum ShoppingEventType
     {
-        ListCreated,
-        ListRenamed,
-        ListDeleted,
         ItemCreated,
+        ItemDeleted,
         ItemRenamed,
         ItemStateChanged,
-        ItemDeleted
+        ListCreated,
+        ListDeleted,
+        ListRenamed,
+        UserCreated,
+        UserDeleted,
+        UserDisabled,
+        UserFriendRequestAccepted,
+        UserFriendRequestRejected,
+        UserFriendRequestSent,
+        UserLogin,
+        UserLoginFailed,
+        UserLogout,
+        UserNotFound,
+        UserRoleAssigned,
+        UserRoleRemoved,
     }
 }

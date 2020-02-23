@@ -1,9 +1,8 @@
-﻿@model ShoppingList
-@{
+﻿@{
     Layout = null;
     string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
 
-    bool hasList = Model != null;
+    bool hasCurrent = ViewBag.Current != null;
 }
 
 <!DOCTYPE html>
@@ -44,7 +43,7 @@
                 <li id="lists-li-template" hidden><a href=""></a></li>
                 @foreach (ShoppingList l in ViewBag.Lists)
                 {
-                    bool hl = hasList && l.ID == Model.ID;
+                    bool hl = hasCurrent && l.ID == ViewBag.Current;
                     <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
                 }
             </ul>

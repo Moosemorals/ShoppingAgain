@@ -1,0 +1,17 @@
+﻿@using  ShoppingAgain.Models;
+
+@{
+    Layout = "~/Views/Shared/_NoUserLayout.cshtml";
+    ViewBag.title = "Welcome to Shopping List";
+}
+
+<h2>Welcome to Shopping List!</h2>
+<p>
+    This is a simple app to help me and my husband keep track of
+    what we should by next time we're out shopping.
+</p>
+
+<p>If you know Osric, ask him for an account.</p>
+
+<p>If you've already done that, login:</p>
+<partial name="_LoginForm" model="new LoginVM()" />
