@@ -42,18 +42,15 @@ namespace ShoppingAgain.Database
 
         public User GetUser(Guid userId)
         {
-            return _db.Users.Find(userId);
-        }
-
-        public IEnumerable<ShoppingList> Get(string userIdString)
-        {
-            User user = GetUser(userIdString);
-            if (user == null)
-            {
-                // Probably shouldn't happen
-                throw new ArgumentException("Can't find user with id " + userIdString);
-            }
-            return user.Lists.Select(ul => ul.List);
+            return _db.Users
+                .Include("CurrentList")
+                .Include("CurrentList.Items")
+                .Include("Lists")
+                .Include("Lists.List")
+                .Include("Lists.List.Items")
+                .Include("Roles")
+                .Include("Roles.Role")
+                .FirstOrDefault(u => u.ID == userId);
         }
 
         public ShoppingList Get(Guid listId)
@@ -145,8 +142,8 @@ namespace ShoppingAgain.Database
         {
             User u = _db.Users
                 .Include("Password")
-                .Include("UserRoles")
-                .Include("UserRoles.Role")
+                .Include("Roles")
+                .Include("Roles.Role")
                 .FirstOrDefault(u => u.Name == login.Username);
 
             if (u == null)

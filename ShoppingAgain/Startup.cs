@@ -12,7 +12,6 @@ using Microsoft.Extensions.Logging;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Database;
 using ShoppingAgain.Events;
-using ShoppingAgain.Middleware;
 
 namespace ShoppingAgain
 {
@@ -44,9 +43,9 @@ namespace ShoppingAgain
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddSingleton<EventService, EventService>();
+            services.AddSingleton<EventService>();
 
-            services.AddScoped<ShoppingService>();
+            services.AddTransient<ShoppingService>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                         .AddCookie(options =>

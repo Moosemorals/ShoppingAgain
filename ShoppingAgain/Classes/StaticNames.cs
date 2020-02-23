@@ -25,7 +25,12 @@
         public static readonly string UserLogoutPath = "/User/Logout";
 
         public static readonly string ListId = "listId";
-        public static readonly string CurrentList = "CurrentLists";
-        public static readonly string Lists = "ShoppingLists";
+
+
+        public static readonly object IsLoggedIn = new object();
+        public static readonly object CurrentList = new object();
+        public static readonly object Lists = new object();
+        public static readonly object User = new object();   
+        
     }
 }

@@ -15,7 +15,7 @@ using ShoppingAgain.Models;
 namespace ShoppingAgain
 {
 
-    [Route("l"),Authorize(Roles = "User")]
+    [Route("l"), Authorize(Roles = "User")]
     public class ListController : Controller
     {
         private readonly ShoppingService lists;
@@ -28,8 +28,10 @@ namespace ShoppingAgain
         [HttpGet("", Name = "ListIndex")]
         public IActionResult Index()
         {
-            ViewBag.User = User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name).Value;
-            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
+            if (HttpContext.Items[StaticNames.CurrentList] is ShoppingList current)
+            {
+                return RedirectToRoute(StaticNames.ListDetails, new { listId = current.ID });
+            }
             return View();
         }
 
@@ -42,15 +44,12 @@ namespace ShoppingAgain
                 return NotFound();
             }
 
-            ViewBag.Nonce = HttpContext.Items["script-nonce"] as string;
-            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(current);
         }
 
         [HttpGet("new", Name = "ListCreate")]
         public IActionResult Create()
         {
-            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View();
         }
 
@@ -64,7 +63,6 @@ namespace ShoppingAgain
                 return RedirectToRoute(StaticNames.ListDetails, new { listId = created.ID });
             }
 
-            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(fromUser);
         }
 
@@ -74,7 +72,6 @@ namespace ShoppingAgain
             ShoppingList current = lists.Get(listId);
             if (current != null)
             {
-                ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
                 return View(current);
             }
 
@@ -101,7 +98,6 @@ namespace ShoppingAgain
                 return RedirectToRoute("ListDetails", new { id = list.ID });
             }
 
-            ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
             return View(fromUser);
         }
 
@@ -111,7 +107,6 @@ namespace ShoppingAgain
             ShoppingList list = lists.Get(listId);
             if (list != null)
             {
-                ViewBag.Lists = lists.GetAll().OrderBy(l => l.Name) ;
                 return View(list);
             }
             Message("CAn't find list to deltete");

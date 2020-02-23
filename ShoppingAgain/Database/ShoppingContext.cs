@@ -42,17 +42,22 @@ namespace ShoppingAgain.Database
             password.ID = Guid.NewGuid();
             Role UserRole = new Role { ID = Guid.NewGuid(), Name = "User" };
             Role AdminRole = new Role { ID = Guid.NewGuid(), Name = "Admin" };
-            User DemoUser = new User { ID = Guid.NewGuid(), Name = "Demo", PasswordID = password.ID };
+            User demoUser = new User { 
+                ID = Guid.NewGuid(),
+                Name = "Demo",
+                PasswordID = password.ID,
+                CurrentListID = list.ID,
+            };
 
             UserRole ur1 = new UserRole()
             {
                 RoleId = UserRole.ID,
-                UserId = DemoUser.ID,
+                UserId = demoUser.ID,
             };
             UserRole ur2 = new UserRole()
             {
                 RoleId = AdminRole.ID,
-                UserId = DemoUser.ID,
+                UserId = demoUser.ID,
             };
 
             modelBuilder.Entity<ShoppingList>()
@@ -68,7 +73,7 @@ namespace ShoppingAgain.Database
 
             modelBuilder.Entity<User>()
                 .ToTable("Users")
-                .HasData(DemoUser);
+                .HasData(demoUser);
 
             modelBuilder.Entity<Role>()
                 .ToTable("Roles")
@@ -76,8 +81,7 @@ namespace ShoppingAgain.Database
 
             modelBuilder.Entity<UserRole>()
                 .ToTable("UserRoles")
-                .HasData(ur1, ur2);
-
+                .HasData(ur1, ur2); 
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
@@ -88,6 +92,9 @@ namespace ShoppingAgain.Database
                 .WithMany(r => r.Users)
                 .HasForeignKey(ur => ur.RoleId);
 
+            modelBuilder.Entity<UserList>()
+                .ToTable("UserLists")
+                .HasData(new UserList { UserId = demoUser.ID, ListId = list.ID });
             modelBuilder.Entity<UserList>().HasKey(ul => new { ul.UserId, ul.ListId });
             modelBuilder.Entity<UserList>()
                 .HasOne(ul => ul.User)

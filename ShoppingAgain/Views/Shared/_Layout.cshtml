@@ -2,7 +2,14 @@
     Layout = null;
     string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
 
-    bool hasCurrent = ViewBag.Current != null;
+    ViewBag.Nonce = Context.Items["script-nonce"] as string;
+    ViewBag.IsLoggedIn = (bool)Context.Items[StaticNames.IsLoggedIn];
+    if (ViewBag.IsLoggedIn)
+    {
+        ViewBag.User = Context.Items[StaticNames.User] as User;
+        ViewBag.Current = Context.Items[StaticNames.CurrentList] as ShoppingList;
+        ViewBag.Lists = (Context.Items[StaticNames.Lists] as IEnumerable<ShoppingList>).ToList();
+    }
 }
 
 <!DOCTYPE html>
@@ -17,7 +24,10 @@
 <body>
     <header id="title">
         <h1>@_title</h1>
-        <div>Hello @ViewBag.User (<form asp-route="UserLogout"><button class="btn">Logout</button></form>)</div>
+        @if (ViewBag.IsLoggedIn)
+        {
+            <div>Hello @ViewBag.User.Name (<form asp-route="UserLogout"><button class="btn">Logout</button></form>)</div>
+        }
     </header>
 
     <main>
@@ -36,20 +46,28 @@
     </main>
 
     <aside>
-        @if (ViewBag.Lists != null)
+        @if (ViewBag.IsLoggedIn)
+        { 
+            if (ViewBag.Lists.Count > 0)
+            {
+
+                <p>Click on the name of a list below to make that list active</p>
+                <ul id="lists">
+                    <li id="lists-li-template" hidden><a href=""></a></li>
+                    @foreach (ShoppingList l in ViewBag.Lists)
+                    {
+                        bool hl = ViewBag.Current.ID == l.ID;
+                        <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
+                    }
+                </ul>
+            }
+            <p><a href="@Url.RouteUrl("ListCreate")">Create a list</a></p>
+        }
+        else
         {
-            <p>Click on the name of a list below to make that list active</p>
-            <ul id="lists">
-                <li id="lists-li-template" hidden><a href=""></a></li>
-                @foreach (ShoppingList l in ViewBag.Lists)
-                {
-                    bool hl = hasCurrent && l.ID == ViewBag.Current;
-                    <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
-                }
-            </ul>
+            <span>Hello!</span>
         }
 
-        <p><a href="@Url.RouteUrl("ListCreate")">Create a list</a></p>
     </aside>
 
     @RenderSection("scripts", false)
