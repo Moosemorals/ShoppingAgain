@@ -5,17 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Database;
 using ShoppingAgain.Models;
+using ShoppingAgain.ViewModels;
 
 namespace ShoppingAgain.Controllers
 {
     [Route("l/{listId:Guid}/items"), Authorize(Roles = "User")]
     public class ItemController : ShoppingBaseController
     {
-        private readonly ShoppingService lists;
-
-        public ItemController(ShoppingService shoppingService)
+        public ItemController(ShoppingService shoppingService) : base(shoppingService)
         {
-            lists = shoppingService;
         }
 
         [HttpPost("new", Name = "ItemCreate"), ValidateAntiForgeryToken]

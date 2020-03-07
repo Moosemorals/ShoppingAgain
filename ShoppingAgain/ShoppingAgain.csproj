@@ -16,6 +16,7 @@
     <None Remove="Static\icon_notification.svg" />
     <None Remove="Static\lock.svg" />
     <None Remove="Static\wanted.svg" />
+    <None Remove="Static\wordlist.txt" />
     <None Remove="Static\words.txt" />
   </ItemGroup>
 
@@ -32,6 +33,9 @@
     <Content Include="Static\lists.css" />
     <Content Include="Static\shopping.js" />
     <Content Include="Static\tables.css" />
+    <Content Include="Static\wordlist.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

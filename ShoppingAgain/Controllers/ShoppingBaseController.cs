@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
+using ShoppingAgain.Database;
 using ShoppingAgain.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,12 @@ namespace ShoppingAgain.Controllers
 {
     public abstract class ShoppingBaseController : Controller
     {
-        public ShoppingBaseController() : base() { }
+
+        protected readonly ShoppingService lists;
+
+        public ShoppingBaseController(ShoppingService Lists) : base() {
+            lists = Lists;
+        }
 
         protected User GetUser()
         {

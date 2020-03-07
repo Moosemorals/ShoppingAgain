@@ -12,6 +12,7 @@ using ShoppingAgain.Classes;
 using ShoppingAgain.Database;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
+using ShoppingAgain.ViewModels;
 
 namespace ShoppingAgain.Controllers
 {
@@ -19,11 +20,9 @@ namespace ShoppingAgain.Controllers
     [Route("l"), Authorize(Roles = "User")]
     public class ListController : ShoppingBaseController
     {
-        private readonly ShoppingService lists;
 
-        public ListController(ShoppingService shoppingService)
+        public ListController(ShoppingService shoppingService) : base(shoppingService)
         {
-            lists = shoppingService;
         }
 
         [HttpGet("", Name = "ListIndex")]

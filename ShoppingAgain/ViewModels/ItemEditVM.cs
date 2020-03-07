@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ShoppingAgain.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ShoppingAgain.Models
+namespace ShoppingAgain.ViewModels
 {
     public class ItemEditVM
     {

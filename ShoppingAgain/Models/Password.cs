@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace ShoppingAgain.Models
 {
@@ -22,6 +24,30 @@ namespace ShoppingAgain.Models
         [Required]
         public User User { get; set; }
         public Guid UserID { get; set; }
+
+        // Based on https://stackoverflow.com/a/3745973/195833
+        public static async Task<string> Generate(int wordCount)
+        {
+            StreamReader reader = File.OpenText("Static/wordlist.txt");
+
+            string[] words = new string[wordCount];
+            int lineCount = 0;
+            Random rng = new Random();
+            string word;
+            while ((word = await reader.ReadLineAsync()) != null)
+            {
+                for (int i = 0; i < wordCount; i += 1)
+                {
+                    if (rng.Next(lineCount) == 0)
+                    {
+                        words[i] = word;
+                    }
+
+                }
+                lineCount += 1;
+            }
+            return string.Join(" ", words);
+        }
 
         public static Password Generate(string pw)
         {
@@ -52,7 +78,7 @@ namespace ShoppingAgain.Models
 
             bool valid = true;
 
-            for (int i =0; i < HashLength; i += 1)
+            for (int i = 0; i < HashLength; i += 1)
             {
                 if (hashBytes[SaltLength + i] != hash[i])
                 {

@@ -2,6 +2,10 @@
 {
     public class Names
     {
+        public const string AdminIndex = "AdminIndex";
+        public const string AdminAddUser = "AdminAddUser";
+        public const string AdminDelUser = "AdminRemoveUser";
+
         public const string ItemChangeName = "ItemChangeName";
         public const string ItemCreate = "ItemCreate";
         public const string ItemDelete = "ItemDelete";
@@ -43,7 +47,6 @@
         public static readonly object IsLoggedIn = new object();
         public static readonly object CurrentList = new object();
         public static readonly object Lists = new object();
-        public static readonly object User = new object();   
-        
+        public static readonly object User = new object();
     }
 }

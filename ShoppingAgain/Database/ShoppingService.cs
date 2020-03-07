@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ShoppingAgain.Classes;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
+using ShoppingAgain.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +24,11 @@ namespace ShoppingAgain.Database
         public void AddEventListener(EventHandler<ShoppingEvent> handler)
         {
             _events.ShoppingEvents += handler;
+        }
+
+        public IEnumerable<User> GetUsers()
+        {
+            return _db.Users;
         }
 
         public void RemoveEventListener(EventHandler<ShoppingEvent> handler)
@@ -53,12 +60,38 @@ namespace ShoppingAgain.Database
                 .FirstOrDefault(u => u.ID == userId);
         }
 
+        public async Task<string> AddUser(string name)
+        {
+            string pwd = await Password.Generate(3);
+            Password password = Password.Generate(pwd);
+            User user = new User
+            {
+                Name = name,
+                Password = password,
+            };
+            password.User = user;
+            _db.Users.Add(user);
+            _db.Passwords.Add(password);
+            _db.UserRoles.Add(new UserRole { User = user, Role = _db.Roles.FirstOrDefault(r => r.Name == Names.RoleUser) });
+            await _db.SaveChangesAsync(); 
+            return pwd;
+        }
+
         public ShoppingList Get(User user, Guid listId)
         {
             return _db.ShoppingLists
                 .Include("Items")
                 .Include("Users")
                 .FirstOrDefault(x => x.ID == listId && x.Users.Any(ul => ul.UserId == user.ID));
+        }
+
+        internal async Task RemoveUser(User user)
+        {
+         //   _db.UserFriends.RemoveRange(_db.UserFriends.Where(uf => uf.UserId == user.ID || uf.FriendId == user.ID));  
+            _db.UserLists.RemoveRange(_db.UserLists.Where(ul => ul.UserId == user.ID));
+            _db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.UserId == user.ID));
+            _db.Users.Remove(user);
+            await _db.SaveChangesAsync();
         }
 
         internal async Task ChangePassword(User u, string pwd)

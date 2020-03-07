@@ -14,6 +14,7 @@ namespace ShoppingAgain.Database
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserList> UserLists { get; set; }
+//        public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<Password> Passwords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -81,7 +82,19 @@ namespace ShoppingAgain.Database
             modelBuilder.Entity<Role>()
                 .ToTable("Roles")
                 .HasData(UserRole, AdminRole);
-
+/*
+            modelBuilder.Entity<UserFriend>()
+                .ToTable("UserFriends");
+            modelBuilder.Entity<UserFriend>().HasKey(uf => new { uf.UserId, uf.FriendId });
+            modelBuilder.Entity<UserFriend>()
+                .HasOne(uf => uf.User)
+                .WithMany(u => u.Friends)
+                .HasForeignKey(uf => uf.UserId);
+            modelBuilder.Entity<UserFriend>()
+                .HasOne(uf => uf.Friend)
+                .WithMany(u => u.Friends)
+                .HasForeignKey(uf => uf.FriendId);
+                */
             modelBuilder.Entity<UserRole>()
                 .ToTable("UserRoles")
                 .HasData(ur1, ur2);

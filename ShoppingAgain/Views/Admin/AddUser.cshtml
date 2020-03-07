@@ -1,0 +1,22 @@
+﻿@model AddUserVM
+@{
+    ViewData["Title"] = "Add User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form asp-route="@Names.AdminAddUser" method="post">
+
+    <dl>
+        <dt><label asp-for="Name"></label></dt>
+        <dd>
+            <div><span asp-validation-for="Name"></span></div>
+            <input asp-for="Name" />
+        </dd>
+    </dl>
+
+    <div>
+        <a asp-route="@Names.AdminIndex">Cancel</a>
+        <button type="submit">Add User</button>
+    </div>
+
+</form>

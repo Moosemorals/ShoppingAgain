@@ -7,19 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Database;
 using ShoppingAgain.Models;
+using ShoppingAgain.ViewModels;
 
 namespace ShoppingAgain.Controllers
 {
     public class AuthController : ShoppingBaseController
     {
-        private readonly ShoppingService _lists;
+        public AuthController(ShoppingService shoppingService) : base(shoppingService) { }
 
-        public AuthController(ShoppingService Lists)
-        {
-            _lists = Lists;
-        }
-
-        [HttpGet(Names.UserLoginPath, Name = Names.UserLogin)]
+        [HttpGet("/Auth/Login", Name = Names.UserLogin)]
         public IActionResult Login(string ReturnUrl)
         {
             LoginVM login = new LoginVM
@@ -29,10 +25,10 @@ namespace ShoppingAgain.Controllers
             return View(login);
         }
 
-        [HttpPost(Names.UserLoginPath), ValidateAntiForgeryToken]
+        [HttpPost("/Auth/Login"), ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM login)
         {
-            User u = _lists.ValidateLogin(login);
+            User u = lists.ValidateLogin(login);
             if (u == null)
             {
                 Message("Login failed");

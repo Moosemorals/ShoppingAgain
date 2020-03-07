@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShoppingAgain.Models
+namespace ShoppingAgain.ViewModels
 {
     public class ListEditVM
     {

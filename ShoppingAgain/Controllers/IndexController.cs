@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
+using ShoppingAgain.Database;
 using ShoppingAgain.Models;
 
 namespace ShoppingAgain.Controllers
@@ -7,6 +8,8 @@ namespace ShoppingAgain.Controllers
 
     public class IndexController : ShoppingBaseController
     {
+
+        public IndexController(ShoppingService shoppingService) : base(shoppingService) { }
 
         [HttpGet("/", Name = "TopIndex")]
         public IActionResult Index()

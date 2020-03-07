@@ -4,4 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<a asp-route="@Names.UserChangePassword">Change Password</a>
+<ul> 
+    <li>
+        <a asp-route="@Names.UserChangePassword">Change Password</a>
+    </li>
+    @if (User.IsInRole(Names.RoleAdmin))
+    {
+        <li>
+            <a asp-route="@Names.AdminIndex">Admin page</a>
+        </li> 
+    }
+</ul>

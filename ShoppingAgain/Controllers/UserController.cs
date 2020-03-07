@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Database;
 using ShoppingAgain.Models;
+using ShoppingAgain.ViewModels;
 
 namespace ShoppingAgain.Controllers
 {
@@ -14,13 +15,11 @@ namespace ShoppingAgain.Controllers
     public class UserController : ShoppingBaseController
     {
 
-        private readonly ShoppingService lists;
-        public UserController(ShoppingService Lists)
+        public UserController(ShoppingService Lists) : base(Lists)
         {
-            lists = Lists;
         }
 
-        [HttpGet(Names.UserIndexPath, Name  = Names.UserIndex)]
+        [HttpGet(Names.UserIndexPath, Name = Names.UserIndex)]
         public IActionResult Index()
         {
             return View();
@@ -34,7 +33,7 @@ namespace ShoppingAgain.Controllers
 
         [HttpPost(Names.UserChangePasswordPath), ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordVM vm)
-        { 
+        {
             if (!ModelState.IsValid)
             {
                 return View(vm);

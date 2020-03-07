@@ -1,0 +1,14 @@
+﻿@model DeleteUserVM
+@{
+    ViewData["Title"] = "Delete User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>Are you sure you want to remove the user <strong>@Model.Name</strong>?</p>
+
+<form asp-route="@Names.AdminDelUser">
+    <div>
+        <a asp-route="@Names.AdminDelUser">Cancel</a>
+        <button type="submit">Delete user</button>
+    </div>
+</form>
