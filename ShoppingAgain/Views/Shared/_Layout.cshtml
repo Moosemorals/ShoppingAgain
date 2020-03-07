@@ -3,12 +3,12 @@
     string _title = string.IsNullOrEmpty(ViewBag.title) ? "Shopping" : "Shopping: " + ViewBag.title;
 
     ViewBag.Nonce = Context.Items["script-nonce"] as string;
-    ViewBag.IsLoggedIn = (bool)Context.Items[StaticNames.IsLoggedIn];
+    ViewBag.IsLoggedIn = (bool)Context.Items[Names.IsLoggedIn];
     if (ViewBag.IsLoggedIn)
     {
-        ViewBag.User = Context.Items[StaticNames.User] as User;
-        ViewBag.Current = Context.Items[StaticNames.CurrentList] as ShoppingList;
-        ViewBag.Lists = (Context.Items[StaticNames.Lists] as IEnumerable<ShoppingList>).ToList();
+        ViewBag.User = Context.Items[Names.User] as User;
+        ViewBag.Current = Context.Items[Names.CurrentList] as ShoppingList;
+        ViewBag.Lists = (Context.Items[Names.Lists] as IEnumerable<ShoppingList>).ToList();
     }
 }
 
@@ -31,8 +31,8 @@
     </header>
 
     <main>
-        <partial name="_Messages" model="TempData[StaticNames.Message]"/>
-       <section id="content">
+        <partial name="_Messages" model="TempData[Names.Message]" />
+        <section id="content">
             @RenderBody()
         </section>
 
@@ -40,7 +40,7 @@
 
     <aside>
         @if (ViewBag.IsLoggedIn)
-        { 
+        {
             if (ViewBag.Lists.Count > 0)
             {
 
@@ -50,7 +50,7 @@
                     @foreach (ShoppingList l in ViewBag.Lists)
                     {
                         bool hl = ViewBag.Current.ID == l.ID;
-                        <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(StaticNames.ListDetails, new { listId = l.ID })">@l.Name</a></li>
+                        <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(Names.ListDetails, new { listId = l.ID })">@l.Name</a></li>
                     }
                 </ul>
             }

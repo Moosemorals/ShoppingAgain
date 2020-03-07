@@ -29,9 +29,9 @@ namespace ShoppingAgain.Controllers
         [HttpGet("", Name = "ListIndex")]
         public IActionResult Index()
         {
-            if (HttpContext.Items[StaticNames.CurrentList] is ShoppingList current)
+            if (HttpContext.Items[Names.CurrentList] is ShoppingList current)
             {
-                return RedirectToRoute(StaticNames.ListDetails, new { listId = current.ID });
+                return RedirectToRoute(Names.ListDetails, new { listId = current.ID });
             }
             return View();
         }
@@ -43,7 +43,7 @@ namespace ShoppingAgain.Controllers
             if (current == null)
             {
                 Message("Can't find requested list");
-                return RedirectToRoute(StaticNames.ListIndex);
+                return RedirectToRoute(Names.ListIndex);
             }
 
             return View(current);
@@ -62,7 +62,7 @@ namespace ShoppingAgain.Controllers
             {
                 ShoppingList created = lists.CreateList(GetUser(), fromUser.Name);
                 Message("The list '{0}' has been created", created.Name);
-                return RedirectToRoute(StaticNames.ListDetails, new { listId = created.ID });
+                return RedirectToRoute(Names.ListDetails, new { listId = created.ID });
             }
 
             return View(fromUser);
@@ -112,7 +112,7 @@ namespace ShoppingAgain.Controllers
                 return View(list);
             }
             Message("CAn't find list to deltete");
-            return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
         }
 
         [HttpPost("{listId:Guid}/Delete"), ValidateAntiForgeryToken]

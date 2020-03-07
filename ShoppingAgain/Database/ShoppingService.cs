@@ -28,6 +28,11 @@ namespace ShoppingAgain.Database
             _events.ShoppingEvents -= handler;
         }
 
+        public User GetUserByName(string name)
+        {
+            return _db.Users.FirstOrDefault(u => u.Name == name);
+        }
+
         public User GetUser(string idString)
         {
             return GetUser(Guid.Parse(idString));
@@ -154,6 +159,8 @@ namespace ShoppingAgain.Database
             _events.LoginSuccesfull(u);
             return u;
         }
+
+
 
         #region IDisposable Support
         protected virtual void Dispose(bool disposing)

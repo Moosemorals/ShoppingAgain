@@ -50,9 +50,9 @@ namespace ShoppingAgain
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                         .AddCookie(options =>
             {
-                options.LoginPath = StaticNames.UserLoginPath;
-                options.AccessDeniedPath = StaticNames.UserDeniedPath;
-                options.LogoutPath = StaticNames.UserLogoutPath;
+                options.LoginPath = Names.UserLoginPath;
+                options.AccessDeniedPath = Names.UserDeniedPath;
+                options.LogoutPath = Names.UserLogoutPath;
 
                 options.Cookie = new CookieBuilder
                 {

@@ -14,23 +14,23 @@ namespace ShoppingAgain.Controllers
 
         protected User GetUser()
         {
-            return HttpContext.Items[StaticNames.User] as User;
+            return HttpContext.Items[Names.User] as User;
         }
 
         protected void Message(string format, params object[] args)
         {
             List<string> messages;
-            if (TempData.ContainsKey(StaticNames.Message))
+            if (TempData.ContainsKey(Names.Message))
             {
-                messages = new List<string>((string[])TempData[StaticNames.Message]);
-                TempData.Remove(StaticNames.Message);
+                messages = new List<string>((string[])TempData[Names.Message]);
+                TempData.Remove(Names.Message);
             }
             else
             {
                 messages = new List<string>();
             }
             messages.Add(string.Format(format, args));
-            TempData.Add(StaticNames.Message, messages);
+            TempData.Add(Names.Message, messages);
         }
 
     }

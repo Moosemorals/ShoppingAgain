@@ -30,13 +30,13 @@ namespace ShoppingAgain.Controllers
             if (!ModelState.IsValid)
             {
                 Message("There was a problem creating that item");
-                RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+                RedirectToRoute(Names.ListDetails, new { listId = list.ID });
             }
 
             Item i = lists.CreateItem(list, fromUser.Name);
 
             Message("The item {0} has been added to {1}", i.Name, list.Name);
-            return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
         }
 
         [HttpPost("{itemId:Guid}/delete", Name = "ItemDelete"), ValidateAntiForgeryToken]
@@ -56,7 +56,7 @@ namespace ShoppingAgain.Controllers
 
             lists.RemoveItem(list, item);
 
-            return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
         }
 
         [HttpPost("{itemId:Guid}/state", Name = "ItemNextState"), ValidateAntiForgeryToken]
@@ -78,7 +78,7 @@ namespace ShoppingAgain.Controllers
             lists.ChangeItemState(list, item, item.State.Next());
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
-            return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
         }
 
         [HttpPost("{itemId:Guid}/state/{state}", Name = "ItemChangeState"), ValidateAntiForgeryToken]
@@ -88,27 +88,27 @@ namespace ShoppingAgain.Controllers
             if (list == null)
             {
                 Message("Can't find the list you asked for");
-                return RedirectToRoute(StaticNames.ListIndex);
+                return RedirectToRoute(Names.ListIndex);
             }
 
             Item item = lists.GetItem(list, itemId);
             if (item == null)
             {
                 Message("Can't find the item you asked for");
-                return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+                return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
             }
 
             if (newState == ItemState.Unknown)
             {
                 Message("Could not work out what state you wanted {0} in", item.Name);
-                return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+                return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
             }
 
             ItemState prev = item.State;
             lists.ChangeItemState(list, item, item.State.Next());
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
-            return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
         }
 
         [HttpGet("{itemId:Guid}/edit", Name = "ItemChangeName")]
@@ -118,14 +118,14 @@ namespace ShoppingAgain.Controllers
             if (list == null)
             {
                 Message("Can't find the list you asked for");
-                return RedirectToRoute(StaticNames.ListIndex);
+                return RedirectToRoute(Names.ListIndex);
             }
 
             Item item = lists.GetItem(list, itemId);
             if (item == null)
             {
                 Message("Can't find the item you asked for");
-                return RedirectToRoute(StaticNames.ListDetails, new { listId = list.ID });
+                return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
             }
 
             return View(new ItemEditVM { ItemID = item.ID, Parent = list, Name = list.Name });

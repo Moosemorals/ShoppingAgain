@@ -11,16 +11,16 @@ namespace ShoppingAgain.Controllers
         [HttpGet("/", Name = "TopIndex")]
         public IActionResult Index()
         {
-            bool isLoggedIn = (bool)HttpContext.Items[StaticNames.IsLoggedIn];
+            bool isLoggedIn = (bool)HttpContext.Items[Names.IsLoggedIn];
 
             if (isLoggedIn)
             {
-                if (HttpContext.Items[StaticNames.CurrentList] is ShoppingList current)
+                if (HttpContext.Items[Names.CurrentList] is ShoppingList current)
                 {
-                    return RedirectToRoute(StaticNames.ListDetails, new { listId = current.ID });
+                    return RedirectToRoute(Names.ListDetails, new { listId = current.ID });
                 } else
                 {
-                    return RedirectToRoute(StaticNames.ListIndex);
+                    return RedirectToRoute(Names.ListIndex);
                 }
             }
 

@@ -8,7 +8,7 @@
 <p>It currently has @Model.Items.Count item@(Model.Items.Count != 1 ? "s": "").</p>
 
 
-<form asp-route="@StaticNames.ListDelete" asp-route-listId="@Model.ID" method="post">
-    <a class="btn" asp-route="@StaticNames.ListDetails" asp-route-listId="@Model.ID">Cancel</a>
+<form asp-route="@Names.ListDelete" asp-route-listId="@Model.ID" method="post">
+    <a class="btn" asp-route="@Names.ListDetails" asp-route-listId="@Model.ID">Cancel</a>
     <button class="btn" type="submit">Delete</button>
 </form>

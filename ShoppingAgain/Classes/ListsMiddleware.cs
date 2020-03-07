@@ -24,17 +24,17 @@ namespace ShoppingAgain.Classes
         {
             if (context.User.Identity.IsAuthenticated)
             {
-                context.Items.Add(StaticNames.IsLoggedIn, true);
+                context.Items.Add(Names.IsLoggedIn, true);
                 string userIdString = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
                 User user = lists.GetUser(userIdString);
 
-                context.Items.Add(StaticNames.User, user);
-                context.Items.Add(StaticNames.CurrentList, user.CurrentList);
-                context.Items.Add(StaticNames.Lists, user.Lists.Select(ul => ul.List));
+                context.Items.Add(Names.User, user);
+                context.Items.Add(Names.CurrentList, user.CurrentList);
+                context.Items.Add(Names.Lists, user.Lists.Select(ul => ul.List));
             }
             else
             { 
-                context.Items.Add(StaticNames.IsLoggedIn, false);
+                context.Items.Add(Names.IsLoggedIn, false);
             }
 
             await _next(context);

@@ -10,16 +10,16 @@ using ShoppingAgain.Models;
 
 namespace ShoppingAgain.Controllers
 {
-    public class UserController : ShoppingBaseController
+    public class AuthController : ShoppingBaseController
     {
         private readonly ShoppingService _lists;
 
-        public UserController(ShoppingService Lists)
+        public AuthController(ShoppingService Lists)
         {
             _lists = Lists;
         }
 
-        [HttpGet("User/Login", Name ="UserLogin")]
+        [HttpGet(Names.UserLoginPath, Name = Names.UserLogin)]
         public IActionResult Login(string ReturnUrl)
         {
             LoginVM login = new LoginVM
@@ -29,7 +29,7 @@ namespace ShoppingAgain.Controllers
             return View(login);
         }
 
-        [HttpPost("User/Login"), ValidateAntiForgeryToken]
+        [HttpPost(Names.UserLoginPath), ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM login)
         {
             User u = _lists.ValidateLogin(login);
@@ -59,17 +59,17 @@ namespace ShoppingAgain.Controllers
                 return Redirect(login.ReturnUrl);
             }
 
-            return RedirectToRoute("ListIndex");
+            return RedirectToRoute(Names.ListIndex);
         }
 
-        [HttpPost("User/Logout", Name = "UserLogout"), Authorize(Roles = "User")]
+        [HttpPost(Names.UserLogoutPath, Name = Names.UserLogout), Authorize(Roles = Names.RoleUser)]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
-            return RedirectToRoute(StaticNames.TopIndex);
+            return RedirectToRoute(Names.TopIndex);
         }
 
-        [HttpGet("User/Denied", Name = "UserDenied")]
+        [HttpGet(Names.UserDeniedPath, Name = Names.UserDenied)]
         public IActionResult Denied()
         {
             return View();
