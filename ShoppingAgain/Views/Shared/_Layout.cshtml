@@ -19,14 +19,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@_title</title>
     <link rel="icon" type="image/svg" href="~/images/icon.svg" />
-    <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" /> -->
 </head>
 <body>
     <header id="title">
         <h1>@_title</h1>
         @if (ViewBag.IsLoggedIn)
         {
-            <div>Hello @ViewBag.User.Name (<form asp-route="UserLogout"><button class="btn">Logout</button></form>)</div>
+            <form asp-route="UserLogout">
+                Hello <a asp-route="@Names.UserIndex">@ViewBag.User.Name</a> (<button class="btn">Logout</button>)
+            </form>
         }
     </header>
 

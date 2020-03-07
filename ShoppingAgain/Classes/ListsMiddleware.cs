@@ -22,21 +22,26 @@ namespace ShoppingAgain.Classes
 
         public async Task Invoke(HttpContext context, ShoppingService lists)
         {
+
+            // Set the default to not logged in 
+
+            context.Items.Add(Names.IsLoggedIn, false);
             if (context.User.Identity.IsAuthenticated)
             {
-                context.Items.Add(Names.IsLoggedIn, true);
                 string userIdString = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                User user = lists.GetUser(userIdString);
+                User user = lists.GetUser(userIdString); 
+                if (user != null)
+                {
+                    context.Items[Names.IsLoggedIn] = true;
+                    context.Items.Add(Names.User, user);
+                    context.Items.Add(Names.CurrentList, user.CurrentList);
+                    context.Items.Add(Names.Lists, user.Lists.Select(ul => ul.List));
+                } else
+                {
+                    // TODO: Log an error
+                }
 
-                context.Items.Add(Names.User, user);
-                context.Items.Add(Names.CurrentList, user.CurrentList);
-                context.Items.Add(Names.Lists, user.Lists.Select(ul => ul.List));
             }
-            else
-            { 
-                context.Items.Add(Names.IsLoggedIn, false);
-            }
-
             await _next(context);
         }
     }

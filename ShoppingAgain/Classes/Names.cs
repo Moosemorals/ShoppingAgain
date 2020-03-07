@@ -14,7 +14,6 @@
         public const string ListIndex = "ListIndex";
 
         public const string Message = "message";
-
         public const string TopIndex = "TopIndex";
 
         public const string UserDenied = "UserDenied";
@@ -24,9 +23,21 @@
         public const string UserLogout = "UserLogout";
         public const string UserLogoutPath = "/Auth/Logout";
 
+        public const string UserIndex = "UserIndex";
+        public const string UserIndexPath = "";
+        public const string UserAddFriend = "UserAddFriend";
+        public const string UserAddFriendPath = "AddFriend";
+        public const string UserDelFriend = "UserDelFriend";
+        public const string UserDelFriendPath = "RemoveFriend";
+        public const string UserShareList = "UserShareList";
+        public const string UserShareListPath = "ShareList";
+
+        public const string UserChangePassword = "UserChangePassword";
+        public const string UserChangePasswordPath = "ChangePassword";
+
         public const string ListId = "listId";
         public const string RoleUser = "User";
-        public const string RoleAuth = "Auth";
+        public const string RoleAdmin = "Admin";
 
 
         public static readonly object IsLoggedIn = new object();

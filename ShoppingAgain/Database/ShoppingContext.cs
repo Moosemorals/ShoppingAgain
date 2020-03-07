@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using ShoppingAgain.Classes;
 using ShoppingAgain.Models;
 using System;
 
@@ -13,6 +14,7 @@ namespace ShoppingAgain.Database
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserList> UserLists { get; set; }
+        public DbSet<Password> Passwords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,16 +40,17 @@ namespace ShoppingAgain.Database
                 State = ItemState.Wanted,
             };
 
-            Password password = Password.Generate("demo");
-            password.ID = Guid.NewGuid();
-            Role UserRole = new Role { ID = Guid.NewGuid(), Name = "User" };
-            Role AdminRole = new Role { ID = Guid.NewGuid(), Name = "Admin" };
-            User demoUser = new User { 
+            Role UserRole = new Role { ID = Guid.NewGuid(), Name = Names.RoleUser };
+            Role AdminRole = new Role { ID = Guid.NewGuid(), Name = Names.RoleAdmin };
+            User demoUser = new User
+            {
                 ID = Guid.NewGuid(),
                 Name = "Demo",
-                PasswordID = password.ID,
                 CurrentListID = list.ID,
             };
+            Password password = Password.Generate("demo");
+            password.ID = Guid.NewGuid();
+            password.UserID = demoUser.ID;
 
             UserRole ur1 = new UserRole()
             {
@@ -81,7 +84,7 @@ namespace ShoppingAgain.Database
 
             modelBuilder.Entity<UserRole>()
                 .ToTable("UserRoles")
-                .HasData(ur1, ur2); 
+                .HasData(ur1, ur2);
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)

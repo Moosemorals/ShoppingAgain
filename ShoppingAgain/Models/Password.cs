@@ -19,6 +19,10 @@ namespace ShoppingAgain.Models
         [Required]
         public int Rounds { get; set; }
 
+        [Required]
+        public User User { get; set; }
+        public Guid UserID { get; set; }
+
         public static Password Generate(string pw)
         {
             byte[] salt = new byte[SaltLength];

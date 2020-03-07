@@ -14,8 +14,6 @@ namespace ShoppingAgain.Models
         public string Name { get; set; }
 
         public virtual Password Password { get; set; }
-        [Required]
-        public Guid PasswordID { get; set; }
 
         public virtual ShoppingList CurrentList { get; set; }
         public Guid? CurrentListID { get; set; }

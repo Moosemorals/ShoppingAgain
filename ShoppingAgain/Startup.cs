@@ -30,11 +30,9 @@ namespace ShoppingAgain
 
             using var shopingDB = new ShoppingContext();
             shopingDB.Database.EnsureCreated();
-            shopingDB.Database.Migrate();
 
             using var eventsDB = new EventContext();
             eventsDB.Database.EnsureCreated();
-            eventsDB.Database.Migrate();
         }
 
         public void ConfigureServices(IServiceCollection services)

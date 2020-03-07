@@ -30,7 +30,7 @@ namespace ShoppingAgain.Controllers
                 messages = new List<string>();
             }
             messages.Add(string.Format(format, args));
-            TempData.Add(Names.Message, messages);
+            TempData.Add(Names.Message, messages.ToArray());
         }
 
     }

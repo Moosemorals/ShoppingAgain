@@ -4,6 +4,7 @@ using ShoppingAgain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShoppingAgain.Database
 {
@@ -48,6 +49,7 @@ namespace ShoppingAgain.Database
                 .Include("Lists.List.Items")
                 .Include("Roles")
                 .Include("Roles.Role")
+                .Include("Password")
                 .FirstOrDefault(u => u.ID == userId);
         }
 
@@ -57,6 +59,16 @@ namespace ShoppingAgain.Database
                 .Include("Items")
                 .Include("Users")
                 .FirstOrDefault(x => x.ID == listId && x.Users.Any(ul => ul.UserId == user.ID));
+        }
+
+        internal async Task ChangePassword(User u, string pwd)
+        {
+            _db.Passwords.Remove(u.Password);
+            Password newPassword = Password.Generate(pwd);
+            u.Password = newPassword;
+            newPassword.UserID = u.ID;
+            _db.Passwords.Add(newPassword);
+            await _db.SaveChangesAsync();
         }
 
         public ShoppingList CreateList(User user, string name)
@@ -159,6 +171,7 @@ namespace ShoppingAgain.Database
             _events.LoginSuccesfull(u);
             return u;
         }
+
 
 
 
