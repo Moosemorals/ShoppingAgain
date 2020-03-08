@@ -14,7 +14,7 @@ namespace ShoppingAgain.Database
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserList> UserLists { get; set; }
-//        public DbSet<UserFriend> UserFriends { get; set; }
+        public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<Password> Passwords { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -82,19 +82,21 @@ namespace ShoppingAgain.Database
             modelBuilder.Entity<Role>()
                 .ToTable("Roles")
                 .HasData(UserRole, AdminRole);
-/*
+
             modelBuilder.Entity<UserFriend>()
                 .ToTable("UserFriends");
-            modelBuilder.Entity<UserFriend>().HasKey(uf => new { uf.UserId, uf.FriendId });
+            modelBuilder.Entity<UserFriend>().HasKey(uf => new { uf.UserID, uf.FriendID });
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.User)
                 .WithMany(u => u.Friends)
-                .HasForeignKey(uf => uf.UserId);
+                .HasForeignKey(uf => uf.UserID)
+                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.Friend)
-                .WithMany(u => u.Friends)
-                .HasForeignKey(uf => uf.FriendId);
-                */
+                .WithMany(u => u.FriendBack)
+                .HasForeignKey(uf => uf.FriendID)
+                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<UserRole>()
                 .ToTable("UserRoles")
                 .HasData(ur1, ur2);
@@ -102,11 +104,13 @@ namespace ShoppingAgain.Database
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.Roles)
-                .HasForeignKey(ur => ur.UserId);
+                .HasForeignKey(ur => ur.UserId)
+                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.Users)
-                .HasForeignKey(ur => ur.RoleId);
+                .HasForeignKey(ur => ur.RoleId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserList>()
                 .ToTable("UserLists")
@@ -115,11 +119,13 @@ namespace ShoppingAgain.Database
             modelBuilder.Entity<UserList>()
                 .HasOne(ul => ul.User)
                 .WithMany(u => u.Lists)
-                .HasForeignKey(ul => ul.UserId);
+                .HasForeignKey(ul => ul.UserId)
+                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserList>()
                 .HasOne(ul => ul.List)
                 .WithMany(l => l.Users)
-                .HasForeignKey(ul => ul.ListId);
+                .HasForeignKey(ul => ul.ListId)
+                 .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

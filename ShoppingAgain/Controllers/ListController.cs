@@ -102,7 +102,84 @@ namespace ShoppingAgain.Controllers
             return View(fromUser);
         }
 
-        [HttpGet("{listId:Guid}/Delete", Name = "ListDelete")]
+        [HttpGet("{listId:Guid}/Share", Name = Names.ListShare)]
+        public IActionResult Share(Guid listId)
+        {
+            ShoppingList list = lists.Get(GetUser(), listId);
+            if (list == null)
+            {
+                Message("Can't find list to share");
+                return RedirectToRoute(Names.ListIndex);
+            }
+
+            ListShareVM vm = new ListShareVM
+            {
+                ListName = list.Name,
+                Friends = new List<ListShareFriendVM>(),
+            };
+
+            foreach (User friend in lists.GetFriends(GetUser()))
+            {
+                vm.Friends.Add(new ListShareFriendVM
+                {
+                    IsShared = list.Users.Any(u => u.UserId == friend.ID),
+                    UserID = friend.ID,
+                    UserName = friend.Name,
+                });
+            }
+
+            return View(vm);
+        }
+
+        [HttpPost("{listId:Guid}/Share"), ValidateAntiForgeryToken]
+        public async Task< IActionResult> Share(Guid listId, ListShareVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            ShoppingList list = lists.Get(GetUser(), listId);
+            if (list == null)
+            {
+                Message("Can't find list to share");
+                return RedirectToRoute(Names.ListIndex);
+            }
+
+            User current = GetUser();
+
+            foreach (ListShareFriendVM userVM in vm.Friends)
+            {
+                User u = lists.GetUser(userVM.UserID);
+                if (u == null)
+                {
+                    ModelState.AddModelError(nameof(userVM.UserID), "Unknown user ID");
+                    continue;
+                }
+
+                if (!current.Friends.Any(uf => uf.FriendID == userVM.UserID))
+                {
+                    ModelState.AddModelError(nameof(userVM.UserName), "Can only share lists with friends");
+                    continue;
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            foreach (ListShareFriendVM userVM in vm.Friends)
+            {
+                User u = lists.GetUser(userVM.UserID);
+                await lists.ShareList(list, u, userVM.IsShared);
+            }
+
+            Message("List {0} shared with {1}", list.Name, vm.Friends.Where(u => u.IsShared).Select(u => u.UserName));
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID }); 
+        }
+
+
+        [HttpGet("{listId:Guid}/Delete", Name = Names.ListDelete)]
         public IActionResult Delete(Guid listId)
         {
             ShoppingList list = lists.Get(GetUser(), listId);
@@ -110,8 +187,8 @@ namespace ShoppingAgain.Controllers
             {
                 return View(list);
             }
-            Message("CAn't find list to deltete");
-            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
+            Message("Can't find list to delete");
+            return RedirectToRoute(Names.ListIndex);
         }
 
         [HttpPost("{listId:Guid}/Delete"), ValidateAntiForgeryToken]

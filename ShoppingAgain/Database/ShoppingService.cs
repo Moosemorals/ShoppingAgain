@@ -57,6 +57,8 @@ namespace ShoppingAgain.Database
                 .Include("Roles")
                 .Include("Roles.Role")
                 .Include("Password")
+                .Include("Friends")
+                .Include("Friends.Friend")
                 .FirstOrDefault(u => u.ID == userId);
         }
 
@@ -73,7 +75,7 @@ namespace ShoppingAgain.Database
             _db.Users.Add(user);
             _db.Passwords.Add(password);
             _db.UserRoles.Add(new UserRole { User = user, Role = _db.Roles.FirstOrDefault(r => r.Name == Names.RoleUser) });
-            await _db.SaveChangesAsync(); 
+            await _db.SaveChangesAsync();
             return pwd;
         }
 
@@ -87,7 +89,7 @@ namespace ShoppingAgain.Database
 
         internal async Task RemoveUser(User user)
         {
-         //   _db.UserFriends.RemoveRange(_db.UserFriends.Where(uf => uf.UserId == user.ID || uf.FriendId == user.ID));  
+            //   _db.UserFriends.RemoveRange(_db.UserFriends.Where(uf => uf.UserId == user.ID || uf.FriendId == user.ID));  
             _db.UserLists.RemoveRange(_db.UserLists.Where(ul => ul.UserId == user.ID));
             _db.UserRoles.RemoveRange(_db.UserRoles.Where(ur => ur.UserId == user.ID));
             _db.Users.Remove(user);
@@ -101,6 +103,26 @@ namespace ShoppingAgain.Database
             u.Password = newPassword;
             newPassword.UserID = u.ID;
             _db.Passwords.Add(newPassword);
+            await _db.SaveChangesAsync();
+        }
+
+        public IEnumerable<User> GetFriends(User user)
+        {
+            return _db.UserFriends
+                .Where(uf => uf.UserID == user.ID || uf.FriendID == user.ID)
+                .Select(uf => uf.UserID == user.ID ? uf.Friend : uf.User);
+        }
+
+        internal async Task AddFriend(User user, User friend, bool isFriend)
+        {
+            if (isFriend && !_db.UserFriends.Any(uf => uf.UserID == user.ID && uf.FriendID == friend.ID))
+            {
+                _db.UserFriends.Add(new UserFriend { UserID = user.ID, FriendID = friend.ID });
+            }
+            else if (!isFriend && _db.UserFriends.Any(uf => uf.UserID == user.ID && uf.FriendID == friend.ID))
+            {
+                _db.UserFriends.Remove(_db.UserFriends.First(uf => uf.UserID == user.ID && uf.FriendID == friend.ID));
+            }
             await _db.SaveChangesAsync();
         }
 
@@ -172,6 +194,19 @@ namespace ShoppingAgain.Database
         internal Item GetItem(ShoppingList list, Guid itemId)
         {
             return list.Items.FirstOrDefault(i => i.ID == itemId);
+        }
+
+        internal async Task ShareList(ShoppingList list, User u, bool isShared)
+        {
+            if (isShared && !_db.UserLists.Any(ul => ul.ListId == list.ID && ul.UserId == u.ID))
+            {
+                _db.UserLists.Add(new UserList { ListId = list.ID, UserId = u.ID });
+            }
+            else if (!isShared && _db.UserLists.Any(ul => ul.ListId == list.ID && ul.UserId == u.ID))
+            {
+                _db.UserLists.Remove(_db.UserLists.First(ul => ul.ListId == list.ID && ul.UserId == u.ID));
+            }
+            await _db.SaveChangesAsync();
         }
 
         public void RemoveItem(ShoppingList list, Item item)

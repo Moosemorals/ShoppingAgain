@@ -54,13 +54,14 @@
     </tfoot>
 </table>
 <p>
-    <a href="@Url.RouteUrl(Names.ListEdit, new { listId = current.ID })">Change the name of the list</a>
+    <a asp-route="@Names.ListEdit" asp-route-listId="@current.ID">Change the name of the list</a>
     |
-    <a href="@Url.RouteUrl(Names.ListDelete, new { listId = current.ID })">Delete this list</a>
+    <a asp-route="@Names.ListShare" asp-route-listId="@current.ID">Share this list</a>
+    |
+    <a asp-route="@Names.ListDelete" asp-route-listId="@current.ID">Delete this list</a>
 </p>
 @section scripts  {
     <script nonce="@ViewBag.Nonce">
         const currentList = "@current.ID";
     </script>
-
 }

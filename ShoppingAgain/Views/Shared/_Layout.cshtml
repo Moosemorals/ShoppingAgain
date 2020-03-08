@@ -51,7 +51,7 @@
                     <li id="lists-li-template" hidden><a href=""></a></li>
                     @foreach (ShoppingList l in ViewBag.Lists)
                     {
-                        bool hl = ViewBag.Current.ID == l.ID;
+                        bool hl = ViewBag.Current != null &&  ViewBag.Current.ID == l.ID;
                         <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(Names.ListDetails, new { listId = l.ID })">@l.Name</a></li>
                     }
                 </ul>

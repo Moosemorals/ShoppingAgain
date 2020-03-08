@@ -19,19 +19,19 @@ namespace ShoppingAgain.Controllers
         {
         }
 
-        [HttpGet(Names.UserIndexPath, Name = Names.UserIndex)]
+        [HttpGet("", Name = Names.UserIndex)]
         public IActionResult Index()
         {
             return View();
         }
 
-        [HttpGet(Names.UserChangePasswordPath, Name = Names.UserChangePassword)]
+        [HttpGet("Password", Name = Names.UserChangePassword)]
         public IActionResult ChangePassword()
         {
             return View();
         }
 
-        [HttpPost(Names.UserChangePasswordPath), ValidateAntiForgeryToken]
+        [HttpPost("Password"), ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordVM vm)
         {
             if (!ModelState.IsValid)
@@ -52,6 +52,67 @@ namespace ShoppingAgain.Controllers
 
             Message("Your password has been changed");
             return RedirectToRoute(Names.ListIndex);
+        }
+
+        [HttpGet("Friends", Name = Names.UserFriends)]
+        public IActionResult Friends()
+        {
+            User current = GetUser();
+            FriendsVM vm = new FriendsVM
+            {
+                Friends = new List<FriendVM>(),
+            };
+
+            foreach (User u in lists.GetUsers())
+            {
+                if (u.ID == current.ID)
+                {
+                    // Can't be friends with yourself
+                    continue;
+                }
+
+                vm.Friends.Add(new FriendVM
+                {
+                    UserId = u.ID,
+                    UserName = u.Name,
+                    IsFriend = current.Friends.Any(uf => uf.FriendID == u.ID),
+                });
+            }
+
+            return View(vm);
+        }
+
+        [HttpPost("Friends"), ValidateAntiForgeryToken]
+        public async Task< IActionResult> Friends(FriendsVM vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            foreach (FriendVM friendVM in vm.Friends)
+            {
+                User u = lists.GetUser(friendVM.UserId);
+                if (u == null)
+                {
+                    ModelState.AddModelError(nameof(friendVM.UserId), "UserID isn't valid");
+                    continue;
+                }
+            }
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
+
+            User current = GetUser();
+            foreach (FriendVM friendVM in vm.Friends)
+            {
+                User u = lists.GetUser(friendVM.UserId);
+                await lists.AddFriend(current, u, friendVM.IsFriend);
+            }
+
+            Message("You are now friends with {0}", string.Join(", ", current.Friends.Select(uf => uf.Friend.Name)));
+            return RedirectToRoute(Names.UserIndex);
         }
     }
 }

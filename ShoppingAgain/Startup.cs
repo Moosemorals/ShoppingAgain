@@ -43,7 +43,8 @@ namespace ShoppingAgain
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<EventService>();
 
-            services.AddTransient<ShoppingService>();
+            services.AddScoped<ShoppingContext>();
+            services.AddScoped<ShoppingService>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                         .AddCookie(options =>

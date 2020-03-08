@@ -8,6 +8,9 @@
     <li>
         <a asp-route="@Names.UserChangePassword">Change Password</a>
     </li>
+    <li>
+        <a asp-route="@Names.UserFriends">Manage Friends</a>
+    </li>
     @if (User.IsInRole(Names.RoleAdmin))
     {
         <li>

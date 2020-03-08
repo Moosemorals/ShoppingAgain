@@ -16,6 +16,7 @@
         public const string ListDetails = "ListDetails";
         public const string ListEdit = "ListEdit";
         public const string ListIndex = "ListIndex";
+        public const string ListShare = "ListShare";
 
         public const string Message = "message";
         public const string TopIndex = "TopIndex";
@@ -28,13 +29,8 @@
         public const string UserLogoutPath = "/Auth/Logout";
 
         public const string UserIndex = "UserIndex";
-        public const string UserIndexPath = "";
-        public const string UserAddFriend = "UserAddFriend";
-        public const string UserAddFriendPath = "AddFriend";
-        public const string UserDelFriend = "UserDelFriend";
-        public const string UserDelFriendPath = "RemoveFriend";
+        public const string UserFriends = "UserFriends";
         public const string UserShareList = "UserShareList";
-        public const string UserShareListPath = "ShareList";
 
         public const string UserChangePassword = "UserChangePassword";
         public const string UserChangePasswordPath = "ChangePassword";

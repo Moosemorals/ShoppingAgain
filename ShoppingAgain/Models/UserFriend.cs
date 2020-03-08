@@ -7,10 +7,10 @@ namespace ShoppingAgain.Models
 {
     public class UserFriend
     {
-        public Guid UserId { get; set; }
+        public Guid UserID { get; set; }
         public User User { get; set; }
 
-        public Guid FriendId { get; set; }
+        public Guid FriendID { get; set; }
         public User Friend { get; set; }
     }
 }

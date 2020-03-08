@@ -1,0 +1,42 @@
+﻿@model FriendsVM
+@{
+    ViewData["Title"] = "Add Friend";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@if (Model.Friends.Count > 0)
+{
+    <form asp-route="@Names.UserFriends" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Friend?</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Friends.Count; i += 1)
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.Friends[i].UserId" />
+                            @Model.Friends[i].UserName
+                        </td>
+                        <td><input asp-for="@Model.Friends[i].IsFriend" /></td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        <div>
+            <a asp-route="@Names.UserIndex">Cancel</a>
+            <button type="submit">Add Friends</button>
+        </div>
+    </form>
+}
+else
+{
+    <p>There aren't any other users</p>
+}
+
