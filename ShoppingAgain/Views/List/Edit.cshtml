@@ -19,6 +19,6 @@
 
     <div id="page-controls">
         <button class="btn" type="submit">Save Changes</button>
-        <a class="btn" href="@Url.RouteUrl(Names.ListDetails, new { listId = current.ID })">Cancel</a>
+        <a asp-route="@Names.ListDetails" asp-route-listId="@current.ID" asp-fragment="@Names.ItemsHash">Cancel</a>
     </div>
 }

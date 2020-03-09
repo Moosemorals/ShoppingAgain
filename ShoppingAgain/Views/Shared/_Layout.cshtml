@@ -25,28 +25,29 @@
     <header>
         @if (ViewBag.IsLoggedIn)
         {
-            <form class="controls" asp-route="UserLogout">
-                <a asp-route="@Names.UserIndex">@ViewBag.User.Name</a>
+            <form class="controls" method="post" asp-route="UserLogout">
+                <a asp-route="@Names.UserIndex" asp-fragment="user-controls">@ViewBag.User.Name</a>
+                <a asp-fragment="@Names.ListHash">Lists</a>
                 @RenderSection("controls", required: false)
                 <button class="btn">Logout</button>
             </form>
         }
     </header>
     <main>
+        <partial name="_Messages" model="TempData[Names.Message]" />
         <section id="content">
             @RenderBody()
         </section>
-        <partial name="_Messages" model="TempData[Names.Message]" />
     </main>
     @if (ViewBag.IsLoggedIn)
     {
-        <aside id="lists" class="chunk">
+        <aside id="@Names.ListHash" class="chunk">
             <ul>
                 <li id="lists-li-template" hidden><a href=""></a></li>
                 @foreach (ShoppingList l in ViewBag.Lists)
                 {
                     bool hl = ViewBag.Current != null && ViewBag.Current.ID == l.ID;
-                    <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(Names.ListDetails, new { listId = l.ID })">@l.Name</a></li>
+                    <li id="@l.ID" highlight="@hl"><a asp-route="@Names.ListDetails" asp-route-listId="@l.ID" asp-fragment="@Names.ItemsHash">@l.Name</a></li>
                 }
                 <li> <a href="@Url.RouteUrl("ListCreate")">Create a list</a></li>
             </ul>

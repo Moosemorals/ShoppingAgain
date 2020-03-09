@@ -9,6 +9,6 @@
 
 
 <form asp-route="@Names.ListDelete" asp-route-listId="@Model.ID" method="post">
-    <a class="btn" asp-route="@Names.ListDetails" asp-route-listId="@Model.ID">Cancel</a>
-    <button class="btn" type="submit">Delete</button>
+    <a asp-route="@Names.ListDetails" asp-route-listId="@Model.ID" asp-fragment="@Names.ItemsHash">Cancel</a>
+    <button type="submit">Delete</button>
 </form>

@@ -34,7 +34,7 @@
     </table>
 
     <div>
-        <a asp-route="@Names.ListDetails">Cancel</a>
+        <a asp-route="@Names.ListDetails" asp-route-listId="@Model.ListID" asp-fragment="@Names.ItemsHash">Cancel</a>
         <button type="submit">Share list</button>
     </div>
 </form>

@@ -55,7 +55,7 @@ namespace ShoppingAgain.Controllers
                 return Redirect(login.ReturnUrl);
             }
 
-            return RedirectToRoute(Names.ListIndex);
+            return RedirectToRoute(Names.ListIndex, Names.ListHash);
         }
 
         [HttpPost(Names.UserLogoutPath, Name = Names.UserLogout), Authorize(Roles = Names.RoleUser)]

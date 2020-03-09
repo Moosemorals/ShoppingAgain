@@ -8,12 +8,12 @@
 }
 
 @section controls {
-    <a href="#lists">Lists</a>
-    <a href="#items">Items</a>
+    <a asp-fragment="@Names.ItemsHash">Items</a>
     <a href="#list-controls">Controls</a>
 }
 
-<div id="items" class="chunk chunk-default">
+<div id="@Names.ItemsHash" class="chunk chunk-default">
+    <h2>@Model.Name</h2>
     <table>
         <tbody>
             @foreach (Item i in current.Items)
@@ -35,7 +35,7 @@
             }
         </tbody>
     </table>
-    <partial name="_ItemEdit" model="new ItemEditVM { Parent = current, Route = Names.ItemCreate }" />
+    <partial name="_EditItem" model='new ItemEditVM { Parent = current, Route = Names.ItemCreate , ButtonText = "New Item"}' />
 </div>
 
 

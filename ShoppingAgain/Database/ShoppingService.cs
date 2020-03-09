@@ -110,18 +110,21 @@ namespace ShoppingAgain.Database
         {
             return _db.UserFriends
                 .Where(uf => uf.UserID == user.ID || uf.FriendID == user.ID)
-                .Select(uf => uf.UserID == user.ID ? uf.Friend : uf.User);
+                .Select(uf => uf.UserID == user.ID ? uf.Friend : uf.User)
+                .Distinct();
         }
 
-        internal async Task AddFriend(User user, User friend, bool isFriend)
+        internal async Task ManageFriend(User user, User friend, bool isFriend)
         {
-            if (isFriend && !_db.UserFriends.Any(uf => uf.UserID == user.ID && uf.FriendID == friend.ID))
+            bool test(UserFriend uf) => (uf.UserID == user.ID && uf.FriendID == friend.ID) || (uf.UserID == friend.ID && uf.FriendID == user.ID);
+
+            if (isFriend && !_db.UserFriends.Any(test))
             {
                 _db.UserFriends.Add(new UserFriend { UserID = user.ID, FriendID = friend.ID });
             }
-            else if (!isFriend && _db.UserFriends.Any(uf => uf.UserID == user.ID && uf.FriendID == friend.ID))
+            else if (!isFriend && _db.UserFriends.Any(test))
             {
-                _db.UserFriends.Remove(_db.UserFriends.First(uf => uf.UserID == user.ID && uf.FriendID == friend.ID));
+                _db.UserFriends.RemoveRange(_db.UserFriends.Where(test));
             }
             await _db.SaveChangesAsync();
         }
@@ -175,11 +178,11 @@ namespace ShoppingAgain.Database
             return i;
         }
 
-        public void ChangeItemName(ShoppingList list, Item item, string newName)
+        public async Task ChangeItemName(ShoppingList list, Item item, string newName)
         {
             string oldName = item.Name;
             item.Name = newName;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             _events.ItemNameChanged(list.ID, item.ID, oldName, newName);
         }
 

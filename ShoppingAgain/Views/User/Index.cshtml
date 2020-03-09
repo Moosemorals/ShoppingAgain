@@ -1,20 +1,29 @@
 ﻿
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "User Controls";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<ul> 
-    <li>
-        <a asp-route="@Names.UserChangePassword">Change Password</a>
-    </li>
-    <li>
-        <a asp-route="@Names.UserFriends">Manage Friends</a>
-    </li>
-    @if (User.IsInRole(Names.RoleAdmin))
-    {
+<div class="chunk" id="user-controls">
+    <ul>
         <li>
-            <a asp-route="@Names.AdminIndex">Admin page</a>
-        </li> 
-    }
-</ul>
+            <a asp-route="@Names.UserChangePassword">Change Password</a>
+        </li>
+        <li>
+            <a asp-route="@Names.UserFriends">Manage Friends</a>
+        </li>
+        @if (User.IsInRole(Names.RoleAdmin))
+        {
+            <li>
+                <a asp-route="@Names.AdminIndex">Admin page</a>
+            </li>
+
+        }
+        <li>
+            <form method="post" asp-route="UserLogout">
+                <button class="btn">Logout</button>
+            </form>
+
+        </li>
+    </ul>
+</div>

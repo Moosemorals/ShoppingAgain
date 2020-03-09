@@ -17,7 +17,7 @@ using ShoppingAgain.ViewModels;
 namespace ShoppingAgain.Controllers
 {
 
-    [Route("l"), Authorize(Roles = "User")]
+    [Route("l"), Authorize(Roles = Names.RoleUser)]
     public class ListController : ShoppingBaseController
     {
 
@@ -25,30 +25,26 @@ namespace ShoppingAgain.Controllers
         {
         }
 
-        [HttpGet("", Name = "ListIndex")]
+        [HttpGet("", Name = Names.ListIndex)]
         public IActionResult Index()
         {
-            if (HttpContext.Items[Names.CurrentList] is ShoppingList current)
-            {
-                return RedirectToRoute(Names.ListDetails, new { listId = current.ID });
-            }
             return View();
         }
 
-        [HttpGet("{listId}", Name = "ListDetails")]
+        [HttpGet("{listId}", Name = Names.ListDetails)]
         public IActionResult Details(Guid listId)
         {
             ShoppingList current = lists.Get(GetUser(), listId);
             if (current == null)
             {
                 Message("Can't find requested list");
-                return RedirectToRoute(Names.ListIndex);
+                return RedirectToRoute(Names.ListIndex, Names.ListHash);
             }
 
             return View(current);
         }
 
-        [HttpGet("new", Name = "ListCreate")]
+        [HttpGet("new", Name = Names.ListCreate)]
         public IActionResult Create()
         {
             return View();
@@ -61,13 +57,13 @@ namespace ShoppingAgain.Controllers
             {
                 ShoppingList created = lists.CreateList(GetUser(), fromUser.Name);
                 Message("The list '{0}' has been created", created.Name);
-                return RedirectToRoute(Names.ListDetails, new { listId = created.ID });
+                return RedirectToRoute(Names.ListDetails, new { listId = created.ID }, Names.ItemsHash);
             }
 
             return View(fromUser);
         }
 
-        [HttpGet("{listId:Guid}/Edit", Name = "ListEdit")]
+        [HttpGet("{listId:Guid}/Edit", Name = Names.ListEdit)]
         public IActionResult Edit(Guid listId)
         {
             ShoppingList current = lists.Get(GetUser(), listId);
@@ -77,7 +73,7 @@ namespace ShoppingAgain.Controllers
             }
 
             Message("Can't find the list to change it's name");
-            return RedirectToRoute("ListIndex");
+            return RedirectToRoute(Names.ListIndex, Names.ListHash);
         }
 
         [HttpPost("{listId:Guid}/Edit"), ValidateAntiForgeryToken]
@@ -96,7 +92,7 @@ namespace ShoppingAgain.Controllers
                 lists.ChangeName(list, fromUser.Name);
 
                 Message("The list '{0}' has been renamed to {1}", oldName, list.Name);
-                return RedirectToRoute("ListDetails", new { id = list.ID });
+                return RedirectToRoute(Names.ListDetails, new { id = list.ID }, Names.ItemsHash);
             }
 
             return View(fromUser);
@@ -109,12 +105,13 @@ namespace ShoppingAgain.Controllers
             if (list == null)
             {
                 Message("Can't find list to share");
-                return RedirectToRoute(Names.ListIndex);
+                return RedirectToRoute(Names.ListIndex, Names.ListHash);
             }
 
             ListShareVM vm = new ListShareVM
             {
                 ListName = list.Name,
+                ListID = list.ID,
                 Friends = new List<ListShareFriendVM>(),
             };
 
@@ -132,7 +129,7 @@ namespace ShoppingAgain.Controllers
         }
 
         [HttpPost("{listId:Guid}/Share"), ValidateAntiForgeryToken]
-        public async Task< IActionResult> Share(Guid listId, ListShareVM vm)
+        public async Task<IActionResult> Share(Guid listId, ListShareVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -143,10 +140,11 @@ namespace ShoppingAgain.Controllers
             if (list == null)
             {
                 Message("Can't find list to share");
-                return RedirectToRoute(Names.ListIndex);
+                return RedirectToRoute(Names.ListIndex, Names.ListHash);
             }
 
             User current = GetUser();
+            IEnumerable<User> friends = lists.GetFriends(current);
 
             foreach (ListShareFriendVM userVM in vm.Friends)
             {
@@ -157,7 +155,7 @@ namespace ShoppingAgain.Controllers
                     continue;
                 }
 
-                if (!current.Friends.Any(uf => uf.FriendID == userVM.UserID))
+                if (!friends.Contains(u))
                 {
                     ModelState.AddModelError(nameof(userVM.UserName), "Can only share lists with friends");
                     continue;
@@ -174,8 +172,16 @@ namespace ShoppingAgain.Controllers
                 await lists.ShareList(list, u, userVM.IsShared);
             }
 
-            Message("List {0} shared with {1}", list.Name, vm.Friends.Where(u => u.IsShared).Select(u => u.UserName));
-            return RedirectToRoute(Names.ListDetails, new { listId = list.ID }); 
+            if (list.Users.Count > 1)
+            {
+                Message("List {0} shared with {1}", list.Name, string.Join(", ", list.Users.Where(ul => ul.User != current).Select(ul => ul.User.Name)));
+            }
+            else
+            {
+                Message("List {0} not shared with anyone", list.Name);
+            }
+
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID }, Names.ItemsHash);
         }
 
 
@@ -188,7 +194,7 @@ namespace ShoppingAgain.Controllers
                 return View(list);
             }
             Message("Can't find list to delete");
-            return RedirectToRoute(Names.ListIndex);
+            return RedirectToRoute(Names.ListIndex, Names.ListHash);
         }
 
         [HttpPost("{listId:Guid}/Delete"), ValidateAntiForgeryToken]
@@ -199,10 +205,10 @@ namespace ShoppingAgain.Controllers
             {
                 lists.DeleteList(list);
                 Message("List {0} has been deleted", list.Name);
-                return RedirectToRoute("ListIndex");
+                return RedirectToRoute(Names.ListIndex, Names.ListHash);
             }
             Message("Couldn't find that list to delete");
-            return RedirectToRoute("ListIndex");
+            return RedirectToRoute(Names.ListIndex, Names.ListHash);
         }
 
         [HttpGet("/events")]
@@ -246,6 +252,5 @@ namespace ShoppingAgain.Controllers
                 lists.RemoveEventListener(handler);
             }
         }
-
     }
 }

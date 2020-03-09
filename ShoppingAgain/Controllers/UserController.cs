@@ -51,7 +51,7 @@ namespace ShoppingAgain.Controllers
             await lists.ChangePassword(u, vm.NewPassword);
 
             Message("Your password has been changed");
-            return RedirectToRoute(Names.ListIndex);
+            return RedirectToRoute(Names.ListIndex, Names.ListHash);
         }
 
         [HttpGet("Friends", Name = Names.UserFriends)]
@@ -83,7 +83,7 @@ namespace ShoppingAgain.Controllers
         }
 
         [HttpPost("Friends"), ValidateAntiForgeryToken]
-        public async Task< IActionResult> Friends(FriendsVM vm)
+        public async Task<IActionResult> Friends(FriendsVM vm)
         {
             if (!ModelState.IsValid)
             {
@@ -108,11 +108,19 @@ namespace ShoppingAgain.Controllers
             foreach (FriendVM friendVM in vm.Friends)
             {
                 User u = lists.GetUser(friendVM.UserId);
-                await lists.AddFriend(current, u, friendVM.IsFriend);
+                await lists.ManageFriend(current, u, friendVM.IsFriend);
             }
 
-            Message("You are now friends with {0}", string.Join(", ", current.Friends.Select(uf => uf.Friend.Name)));
-            return RedirectToRoute(Names.UserIndex);
+            if (current.Friends.Count > 0)
+            {
+                Message("You are now friends with {0}", string.Join(", ", current.Friends.Select(uf => uf.Friend.Name)));
+            }
+            else
+            {
+                Message("You have no friends");
+            }
+
+            return RedirectToRoute(Names.UserIndex, "user-controls");
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿@using  ShoppingAgain.Models;
-
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.title = "Welcome to Shopping List";
 }
@@ -11,7 +9,8 @@
     what we should by next time we're out shopping.
 </p>
 
-<p>If you know Osric, ask him for an account.</p>
-
-<p>If you've already done that, login:</p>
+<p>
+    If you know Osric, ask him for an account.
+    If you've already done that, login:
+</p>
 <partial name="_LoginForm" model="new LoginVM()" />

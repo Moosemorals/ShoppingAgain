@@ -11,7 +11,7 @@
 
     <p>
         <button type="submit">Delete</button>
-        <a href="@Url.RouteUrl(Names.ListDetails, new { listId = Model.Parent.ID })">Cancel</a>
+        <a asp-route="@Names.ListDetails" asp-route-listId="@Model.Parent.ID" asp-fragment="@Names.ItemsHash">Cancel</a>
     </p>
 
 </form>

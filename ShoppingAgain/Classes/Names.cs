@@ -10,6 +10,7 @@
         public const string ItemCreate = "ItemCreate";
         public const string ItemDelete = "ItemDelete";
         public const string ItemNextState = "ItemNextState";
+        public const string ItemsHash = "Items";
 
         public const string ListCreate = "ListCreate";
         public const string ListDelete = "ListDelete";
@@ -17,6 +18,7 @@
         public const string ListEdit = "ListEdit";
         public const string ListIndex = "ListIndex";
         public const string ListShare = "ListShare";
+        public const string ListHash = "Lists";
 
         public const string Message = "message";
         public const string TopIndex = "TopIndex";

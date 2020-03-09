@@ -3,6 +3,6 @@
     <form method="post" asp-route="@Model.Route" asp-route-listId="@Model.Parent.ID">
         <input class="flex-fill" asp-for="Name" />
         <input asp-for="ItemID" />
-        <button type="submit">Add Item</button>
+        <button type="submit">@Model.ButtonText</button>
     </form> 
 </div>

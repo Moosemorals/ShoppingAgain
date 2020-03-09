@@ -88,11 +88,11 @@ table {
 .item-create form > *:first-child {
     padding-left: 0;
 }
+
 .item-create form > *:last-child {
     padding-right: 0;
 }
-
-
+ 
 .flex-fill {
     flex: 1;
 }
@@ -116,4 +116,12 @@ tfoot {
 
 #message-holder {
     font-size: 80%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 0.4em;
+    width: 100%;
+    color: var(--back-colour);
+    background-color: var(--text-color);
+    border: var(--border);
+    border-radius: 0.3em;
 }

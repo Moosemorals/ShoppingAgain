@@ -20,10 +20,10 @@ namespace ShoppingAgain.Controllers
             {
                 if (HttpContext.Items[Names.CurrentList] is ShoppingList current)
                 {
-                    return RedirectToRoute(Names.ListDetails, new { listId = current.ID });
+                    return RedirectToRoute(Names.ListDetails, new { listId = current.ID }, Names.ItemsHash);
                 } else
                 {
-                    return RedirectToRoute(Names.ListIndex);
+                    return RedirectToRoute(Names.ListIndex, Names.ListHash);
                 }
             }
 

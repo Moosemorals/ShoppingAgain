@@ -12,6 +12,7 @@ namespace ShoppingAgain.ViewModels
     {
         public List<ListShareFriendVM> Friends { get; set; }
         public string ListName { get; set; }
+        public Guid ListID { get; set; }
     }
 
     public class ListShareFriendVM
