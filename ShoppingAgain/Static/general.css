@@ -2,24 +2,20 @@
     --back-colour: #111;
     --text-color: #eee;
     --border: 2px var(--text-color) solid;
+    --margin-small: 0.2rem;
+    --margin-big: 0.8rem;
     font-size: 24px;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
- 
-    margin: 1em;
+    margin: var(--margin-big);
     background: var(--back-colour);
     color: var(--text-color);
 }
 
-body > header {
-    width: 100%;
-    padding-bottom: 0.4em;
-    margin-bottom: 1em;
-}
-
-h1 {
-    font-family: sans-serif;
-    margin: 0.2em;
-}
+    body > header {
+        width: 100%;
+        padding-bottom: var(--margin-small);
+        margin-bottom: var(--margin-big);
+    }
 
 a {
     color: var(--text-color);
@@ -39,16 +35,32 @@ button {
     cursor: pointer;
 }
 
+th {
+    text-align: left;
+    margin-bottom: var(--margin-small);
+}
 
-.controls {
+
+.controls, .ok-cancel {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
 }
 
-    .controls > * {
-        margin: 0.2em;
+    .controls > *, .ok-cancel > * {
+        margin: var(--margin-small);
     }
+
+        .controls > *:first-child, .ok-cancel > *:first-child {
+            margin-left: 0;
+        }
+
+        .controls > *:last-child, .ok-cancel > *:last-child {
+            margin-right: 0;
+        }
+
+
+
 
 table {
     width: 100%;
@@ -56,7 +68,7 @@ table {
 }
 
 .item {
-   border-top: var(--border);
+    border-top: var(--border);
 }
 
     .item:last-child {
@@ -68,37 +80,37 @@ table {
     }
 
     .item td {
-        margin: 0.4em 0;
+        margin: var(--margin-small) 0;
     }
 
 .item-create {
     margin-top: 1em;
 }
 
-.item-create form {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-}
+    .item-create form {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: flex-start;
+    }
 
-.item-create form > * {
-    padding: 0 0.4em;
-}
+        .item-create form > * {
+            padding: 0 var(--margin-small);
+        }
 
-.item-create form > *:first-child {
-    padding-left: 0;
-}
+            .item-create form > *:first-child {
+                padding-left: 0;
+            }
 
-.item-create form > *:last-child {
-    padding-right: 0;
-}
- 
+            .item-create form > *:last-child {
+                padding-right: 0;
+            }
+
 .flex-fill {
     flex: 1;
 }
 
 tfoot {
-    margin-top: 0.4em;
+    margin-top: var(--margin-small);
 }
 
 .item-name {
@@ -106,22 +118,22 @@ tfoot {
     font-size: 110%;
 }
 
-.chunk{
+.chunk {
     display: none;
 }
 
-.chunk:target {
-    display: block;
-}
+    .chunk:target {
+        display: block;
+    }
 
 #message-holder {
     font-size: 80%;
-    margin-top: 1em;
-    margin-bottom: 1em;
-    padding: 0.4em;
+    margin-top: var(--margin-big);
+    margin-bottom: var(--margin-big);
+    padding: var(--margin-small);
     width: 100%;
     color: var(--back-colour);
     background-color: var(--text-color);
     border: var(--border);
-    border-radius: 0.3em;
+    border-radius: var(--margin-small);
 }

@@ -3,12 +3,12 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
- 
+
 <h3>Are you sure you want to delete the list '@(Model.Name)'?</h3>
-<p>It currently has @Model.Items.Count item@(Model.Items.Count != 1 ? "s": "").</p>
+<p>It currently has @Model.Items.Count item@(Model.Items.Count != 1 ? "s" : "").</p>
 
 
-<form asp-route="@Names.ListDelete" asp-route-listId="@Model.ID" method="post">
+<form class="ok-cancel" asp-route="@Names.ListDelete" asp-route-listId="@Model.ID" method="post">
     <a asp-route="@Names.ListDetails" asp-route-listId="@Model.ID" asp-fragment="@Names.ItemsHash">Cancel</a>
     <button type="submit">Delete</button>
 </form>

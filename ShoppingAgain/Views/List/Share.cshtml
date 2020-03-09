@@ -9,35 +9,35 @@
 {
 
 
-<form asp-route="@Names.ListShare" method="post">
-    <table>
-        <thead>
-            <tr>
-                <th>User</th>
-                <th>Share?</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.Friends.Count; i += 1)
-            {
+    <form asp-route="@Names.ListShare" method="post">
+        <table>
+            <thead>
                 <tr>
-                    <td>
-                        <input asp-for="@Model.Friends[i].UserID" />
-                        <span>@Model.Friends[i].UserName</span>
-                    </td>
-                    <td>
-                        <input asp-for="@Model.Friends[i].IsShared" />
-                    </td>
+                    <th>User</th>
+                    <th>Share?</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Friends.Count; i += 1)
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.Friends[i].UserID" />
+                            <span>@Model.Friends[i].UserName</span>
+                        </td>
+                        <td>
+                            <input asp-for="@Model.Friends[i].IsShared" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <div>
-        <a asp-route="@Names.ListDetails" asp-route-listId="@Model.ListID" asp-fragment="@Names.ItemsHash">Cancel</a>
-        <button type="submit">Share list</button>
-    </div>
-</form>
+        <div class="ok-cancel">
+            <a asp-route="@Names.ListDetails" asp-route-listId="@Model.ListID" asp-fragment="@Names.ItemsHash">Cancel</a>
+            <button type="submit">Share list</button>
+        </div>
+    </form>
 }
 else
 {

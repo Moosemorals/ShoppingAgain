@@ -17,8 +17,8 @@
         </dd>
     </dl>
 
-    <div id="page-controls">
-        <button class="btn" type="submit">Save Changes</button>
+    <div class="ok-cancel">
         <a asp-route="@Names.ListDetails" asp-route-listId="@current.ID" asp-fragment="@Names.ItemsHash">Cancel</a>
+        <button type="submit">Save Changes</button>
     </div>
 }

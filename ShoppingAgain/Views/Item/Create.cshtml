@@ -16,8 +16,8 @@
         </dd>
     </dl>
 
-    <div>
+    <div class="ok-cancel">
+        <a asp-route="@Names.ListIndex" asp-fragment="@Names.ListHash">Cancel</a>
         <button type="submit">Add Item</button>
-        <a href="@Url.RouteUrl("ListIndex")">Cancel</a>
     </div>
 }

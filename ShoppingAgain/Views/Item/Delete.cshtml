@@ -9,10 +9,10 @@
 
     <p>Are you sure you want to delete @Model.Name from @Model.Parent.Name?</p>
 
-    <p>
-        <button type="submit">Delete</button>
+    <div class="ok-cancel">
         <a asp-route="@Names.ListDetails" asp-route-listId="@Model.Parent.ID" asp-fragment="@Names.ItemsHash">Cancel</a>
-    </p>
+        <button type="submit">Delete</button>
+    </div>
 
 </form>
 

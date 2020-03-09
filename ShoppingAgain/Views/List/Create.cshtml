@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<form method="post" asp-route="@Names.ListCreate"> 
+<form method="post" asp-route="@Names.ListCreate">
     <dl>
         <dt><label asp-for="Name"></label></dt>
         <dd>
@@ -13,8 +13,8 @@
         </dd>
     </dl>
 
-    <div>
-        <a class="btn" asp-route="@Names.ListIndex" asp-fragment="@Names.ListHash">Cancel</a>
-        <button class="btn" type="submit">Create List</button>
-    </div> 
+    <div class="ok-cancel">
+        <a asp-route="@Names.ListIndex" asp-fragment="@Names.ListHash">Cancel</a>
+        <button type="submit">Create List</button>
+    </div>
 </form>
