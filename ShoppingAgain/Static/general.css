@@ -1,107 +1,119 @@
-﻿/*! Local styles */
-
-html {
-    box-sizing: border-box;
-    --foreground-color: #faebd7;
-    --background-color: #111;
-    --medium-color: hsl(0, 0, 50%);
-    display: flex;
-    flex-flow: row;
-    justify-content: flex-start;
-    align-content: flex-start;
-}
-
-*, *:before, *:after {
-    box-sizing: inherit;
-}
-
-body {
-    background: var(--background-color);
-    color: var(--foreground-color);
-    display: grid;
-    grid-template-columns: 14em 1fr;
-    grid-template-rows: 4em 1fr;
-    grid-template-areas: "header header" "menu main";
-    max-width: 80em;
-    font-family: "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
-    font-size: 16px;
-    line-height: 1.2;
+﻿body {
+    --back-colour: #111;
+    --text-color: #eee;
+    --border: 2px var(--text-color) solid;
+    font-size: 24px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+ 
     margin: 1em;
-    --small-padding: 0.2em;
-    --large-padding: 1.2em;
+    background: var(--back-colour);
+    color: var(--text-color);
 }
 
-a, a:visited {
-    color: var(--foreground-color);
+body > header {
+    width: 100%;
+    padding-bottom: 0.4em;
+    margin-bottom: 1em;
 }
 
-#page-controls {
-    margin-left: var(--large-padding);
+h1 {
+    font-family: sans-serif;
+    margin: 0.2em;
 }
 
-header {
-    grid-area: header;
+a {
+    color: var(--text-color);
 }
 
-main {
-    grid-area: main;
-}
+    a:visited {
+        color: var(--text-color);
+    }
 
-aside {
-    grid-area: menu;
-}
-
-
-button.state {
+button {
+    border: none;
     background: inherit;
     color: inherit;
+    text-decoration: underline;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
 }
+
 
 .controls {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: flex-start;
-    align-content: center;
 }
 
-    .controls form:not(:last-of-type) {
-        padding-right: var(--large-padding);
+    .controls > * {
+        margin: 0.2em;
     }
 
-    .controls form:first-of-type {
-        padding-left: var(--large-padding);
-    }
-
-#lists {
-    padding: 0;
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-    #lists li {
-        border: 2px solid transparent;
-        padding: 2px 5px;
-        list-style-type: none;
+.item {
+   border-top: var(--border);
+}
+
+    .item:last-child {
+        border-bottom: var(--border);
     }
 
-        #lists li.highlight::after {
-            content: " <-";
-        }
-        #lists li.highlight::before {
-            content: "-> ";
-        }
+    .item .controls {
+        justify-content: flex-end;
+    }
 
+    .item td {
+        margin: 0.4em 0;
+    }
 
-        #lists li a {
-            font-size: inherit;
-            transition: font-size 0.3s ease
-        }
+.item-create {
+    margin-top: 1em;
+}
 
-            #lists li a:hover {
-                font-size: 140%;
-            }
-
-header {
+.item-create form {
     display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-content: flex-start;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+
+.item-create form > * {
+    padding: 0 0.4em;
+}
+
+.item-create form > *:first-child {
+    padding-left: 0;
+}
+.item-create form > *:last-child {
+    padding-right: 0;
+}
+
+
+.flex-fill {
+    flex: 1;
+}
+
+tfoot {
+    margin-top: 0.4em;
+}
+
+.item-name {
+    vertical-align: central;
+    font-size: 110%;
+}
+
+.chunk{
+    display: none;
+}
+
+.chunk:target {
+    display: block;
+}
+
+#message-holder {
+    font-size: 80%;
 }

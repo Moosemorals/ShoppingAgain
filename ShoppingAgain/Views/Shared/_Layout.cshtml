@@ -19,55 +19,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@_title</title>
     <link rel="icon" type="image/svg" href="~/images/icon.svg" />
-    <!-- <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" />
 </head>
 <body>
-    <header id="title">
-        <h1>@_title</h1>
+    <header>
         @if (ViewBag.IsLoggedIn)
         {
-            <form asp-route="UserLogout">
-                Hello <a asp-route="@Names.UserIndex">@ViewBag.User.Name</a> (<button class="btn">Logout</button>)
+            <form class="controls" asp-route="UserLogout">
+                <a asp-route="@Names.UserIndex">@ViewBag.User.Name</a>
+                @RenderSection("controls", required: false)
+                <button class="btn">Logout</button>
             </form>
         }
     </header>
-
     <main>
-        <partial name="_Messages" model="TempData[Names.Message]" />
         <section id="content">
             @RenderBody()
         </section>
-
+        <partial name="_Messages" model="TempData[Names.Message]" />
     </main>
-
-    <aside>
-        @if (ViewBag.IsLoggedIn)
-        {
-            if (ViewBag.Lists.Count > 0)
-            {
-
-                <p>Click on the name of a list below to make that list active</p>
-                <ul id="lists">
-                    <li id="lists-li-template" hidden><a href=""></a></li>
-                    @foreach (ShoppingList l in ViewBag.Lists)
-                    {
-                        bool hl = ViewBag.Current != null &&  ViewBag.Current.ID == l.ID;
-                        <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(Names.ListDetails, new { listId = l.ID })">@l.Name</a></li>
-                    }
-                </ul>
-            }
-            <p><a href="@Url.RouteUrl("ListCreate")">Create a list</a></p>
-        }
-        else
-        {
-            <span>Hello!</span>
-        }
-
-    </aside>
-
-    @RenderSection("scripts", false)
-
-    <script defer type="module" src="~/static/shopping.min.js"></script>
+    @if (ViewBag.IsLoggedIn)
+    {
+        <aside id="lists" class="chunk">
+            <ul>
+                <li id="lists-li-template" hidden><a href=""></a></li>
+                @foreach (ShoppingList l in ViewBag.Lists)
+                {
+                    bool hl = ViewBag.Current != null && ViewBag.Current.ID == l.ID;
+                    <li id="@l.ID" highlight="@hl"><a href="@Url.RouteUrl(Names.ListDetails, new { listId = l.ID })">@l.Name</a></li>
+                }
+                <li> <a href="@Url.RouteUrl("ListCreate")">Create a list</a></li>
+            </ul>
+        </aside>
+        @RenderSection("scripts", false)
+        <script defer type="module" src="~/static/shopping.min.js"></script>
+    }
 </body>
 </html>
 

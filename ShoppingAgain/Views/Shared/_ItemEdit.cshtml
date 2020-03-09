@@ -1,14 +1,8 @@
 ﻿@model ItemEditVM
-<tr class="item-create">
-    <td>
-        <input form="@Model.FormId" asp-for="Name" placeholder="Item Name" required />
-    </td>
-    <td>
-        <form id="@Model.FormId" method="post" asp-route="@Model.Route" asp-route-listId="@Model.Parent.ID">
-            <input asp-for="ItemID"/>
-            <button type="submit">Add Item</button>
-        </form>
-    </td>
-</tr>
-
-
+<div class="item-create">
+    <form method="post" asp-route="@Model.Route" asp-route-listId="@Model.Parent.ID">
+        <input class="flex-fill" asp-for="Name" />
+        <input asp-for="ItemID" />
+        <button type="submit">Add Item</button>
+    </form> 
+</div>

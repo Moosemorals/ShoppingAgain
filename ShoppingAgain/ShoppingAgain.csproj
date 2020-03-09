@@ -26,13 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Static\form.css" />
-    <Content Include="Static\general.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Static\lists.css" />
     <Content Include="Static\shopping.js" />
-    <Content Include="Static\tables.css" />
     <Content Include="Static\wordlist.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

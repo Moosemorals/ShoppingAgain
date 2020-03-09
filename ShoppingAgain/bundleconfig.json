@@ -4,9 +4,6 @@
     "inputFiles": [
       "Static/normalize.css",
       "Static/general.css",
-      "Static/form.css",
-      "Static/lists.css",
-      "Static/tables.css",
       "Static/svg.css"
     ],
     "minify": {

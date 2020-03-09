@@ -7,59 +7,46 @@
     ViewBag.title = current.Name;
 }
 
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Controls</th>
-        </tr>
-    </thead>
-    <tbody class="items" id="list">
-        <tr id="list-tr-template" hidden>
-            <td></td>
-            <td class="controls">
-                <form class="state-form" method="post" action="">
-                    <button class="state" type="submit"><img /></button>
-                </form>
-                <form class="delete-form" method="post" action="">
-                    <button class="state" type="submit"><img /></button>
-                </form>
-                <form method="post" action="">
-                    <button class="state" type="submit"><img /></button>
-                </form>
+@section controls {
+    <a href="#lists">Lists</a>
+    <a href="#items">Items</a>
+    <a href="#list-controls">Controls</a>
+}
 
-            </td>
-        </tr>
-        @foreach (Item i in current.Items)
-        {
-            <tr id="@i.ID">
-                <td>@i.Name</td>
-                <td class="controls">
-                    <form method="post" asp-route="@Names.ItemNextState" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
-                        <button class="state" type="submit"><state s="@i.State">@i.State</button>
-                    </form>
-                    <a href="@Url.RouteUrl(Names.ItemChangeName, new { listId = Model.ID, itemId = i.ID })">
-                        <icon src="~/images/edit.svg">
-                    </a>
+<div id="items" class="chunk chunk-default">
+    <table>
+        <tbody>
+            @foreach (Item i in current.Items)
+            {
+                <tr class="item">
+                    <td class="item-name">@i.Name</td>
+                    <td class="controls">
+                        <form method="post" asp-route="@Names.ItemNextState" asp-route-listId="@Model.ID" asp-route-itemId="@i.ID">
+                            <button class="state" type="submit"><state s="@i.State"></button>
+                        </form>
+                        <a href="@Url.RouteUrl(Names.ItemChangeName, new { listId = Model.ID, itemId = i.ID })">
+                            <icon src="~/images/edit.svg">
+                        </a>
+                        <a href="@Url.RouteUrl(Names.ItemDelete, new { listId = Model.ID, itemId = i.ID })">
+                            <icon src="~/images/trash.svg">
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <partial name="_ItemEdit" model="new ItemEditVM { Parent = current, Route = Names.ItemCreate }" />
+</div>
 
-                    <a href="@Url.RouteUrl(Names.ItemDelete, new { listId = Model.ID, itemId = i.ID })">
-                        <icon src="~/images/trash.svg">
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-    <tfoot>
-        <partial name="_ItemEdit" model="new ItemEditVM { Parent = current, Route = Names.ItemCreate }" />
-    </tfoot>
-</table>
-<p>
-    <a asp-route="@Names.ListEdit" asp-route-listId="@current.ID">Change the name of the list</a>
-    |
-    <a asp-route="@Names.ListShare" asp-route-listId="@current.ID">Share this list</a>
-    |
-    <a asp-route="@Names.ListDelete" asp-route-listId="@current.ID">Delete this list</a>
-</p>
+
+<div class="chunk" id="list-controls">
+    <ul>
+        <li><a asp-route="@Names.ListEdit" asp-route-listId="@current.ID">Change the name of the list</a></li>
+        <li><a asp-route="@Names.ListShare" asp-route-listId="@current.ID">Share this list</a></li>
+        <li><a asp-route="@Names.ListDelete" asp-route-listId="@current.ID">Delete this list</a></li>
+    </ul>
+</div>
+
 @section scripts  {
     <script nonce="@ViewBag.Nonce">
         const currentList = "@current.ID";

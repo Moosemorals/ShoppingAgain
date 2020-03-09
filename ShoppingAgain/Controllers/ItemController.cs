@@ -54,7 +54,7 @@ namespace ShoppingAgain.Controllers
 
             lists.RemoveItem(list, item);
 
-            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID }, "items");
         }
 
         [HttpPost("{itemId:Guid}/state", Name = "ItemNextState"), ValidateAntiForgeryToken]
@@ -76,7 +76,7 @@ namespace ShoppingAgain.Controllers
             lists.ChangeItemState(list, item, item.State.Next());
 
             Message("{0} state changed from {1} to {2}", item.Name, prev, item.State);
-            return RedirectToRoute(Names.ListDetails, new { listId = list.ID });
+            return RedirectToRoute(Names.ListDetails, new { listId = list.ID }, "items");
         }
 
         [HttpPost("{itemId:Guid}/state/{state}", Name = "ItemChangeState"), ValidateAntiForgeryToken]
