@@ -12,7 +12,7 @@ deploy:
 >   exit
 > fi
 > dotnet publish --output target/Shopping --configuration Release --runtime linux-x64
-> tar -czf target/Shopping.tgz -C target ShoppingAgain
+> tar -czf target/Shopping.tgz -C target Shopping
 > #scp target/Shopping.tgz shopping@nuit:/home/shopping
 > #ssh shopping@nuit /home/shopping/bin/deploy.sh
 .PHONY: build
