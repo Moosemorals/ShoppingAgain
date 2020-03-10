@@ -25,10 +25,10 @@
                             <button class="state" type="submit"><state s="@i.State"></button>
                         </form>
                         <a href="@Url.RouteUrl(Names.ItemChangeName, new { listId = Model.ID, itemId = i.ID })">
-                            <icon src="~/images/edit.svg">
+                            <icon src="~/static/images/edit.svg">
                         </a>
                         <a href="@Url.RouteUrl(Names.ItemDelete, new { listId = Model.ID, itemId = i.ID })">
-                            <icon src="~/images/trash.svg">
+                            <icon src="~/static/images/trash.svg">
                         </a>
                     </td>
                 </tr>

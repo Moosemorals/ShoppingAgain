@@ -37,10 +37,12 @@
         public const string UserChangePassword = "UserChangePassword";
         public const string UserChangePasswordPath = "ChangePassword";
 
+        public const string InitialSetupComplete = "InitialSetupComplete";
+
         public const string ListId = "listId";
         public const string RoleUser = "User";
         public const string RoleAdmin = "Admin";
-
+        public const string DatabasePath = "ShoppingDatabasePath"; 
 
         public static readonly object IsLoggedIn = new object();
         public static readonly object CurrentList = new object();

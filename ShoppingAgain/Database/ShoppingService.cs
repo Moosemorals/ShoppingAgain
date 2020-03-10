@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Events;
 using ShoppingAgain.Models;
@@ -15,10 +16,73 @@ namespace ShoppingAgain.Database
         private readonly ShoppingContext _db;
         private readonly EventService _events;
 
-        public ShoppingService(EventService events)
+        public ShoppingService(ShoppingContext db, EventService events)
         {
-            _db = new ShoppingContext();
+            _db = db;
             _events = events;
+        }
+
+        public async Task Seed()
+        {
+            if (!await IsOptionSet(Names.InitialSetupComplete))
+            {
+                IConfiguration conf = new ConfigurationBuilder()
+                    .AddJsonFile("secrets.json", false, false)
+                    .Build();
+
+                Password p = Password.Generate(conf["DefaultPassword"]);
+                User u = new User
+                {
+                    Name = conf["DefaultUser"],
+                    Password = p,
+                };
+
+                _db.Passwords.Add(p);
+                _db.Users.Add(u);
+                _db.UserRoles.Add(new UserRole { User = u, Role = _db.Roles.FirstOrDefault(r => r.Name == Names.RoleUser) });
+                _db.UserRoles.Add(new UserRole { User = u, Role = _db.Roles.FirstOrDefault(r => r.Name == Names.RoleAdmin) });
+               // _db.Options.Add(new Option { Key = Names.InitialSetupComplete, Value = "true" });
+
+                await _db.SaveChangesAsync();
+            }
+        }
+
+        public async Task SetOption(string key, String value)
+        {
+            Option o = await _db.Options.FindAsync(key);
+            if (o == null)
+            {
+                _db.Options.Add(new Option
+                {
+                    Key = key,
+                    Value = value,
+                });
+            }
+            else
+            {
+                o.Value = value;
+            }
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<string> GetOption(string key, string @default)
+        {
+            Option o = await _db.Options.FindAsync(key);
+            if (o != null)
+            {
+                return o.Value;
+            }
+            return @default;
+        }
+
+        public Task<string> GetOption(string key)
+        {
+            return GetOption(key, null);
+        }
+
+        public async Task<bool> IsOptionSet(string key)
+        {
+            return await _db.Options.AnyAsync(o => o.Key == key);
         }
 
         public void AddEventListener(EventHandler<ShoppingEvent> handler)

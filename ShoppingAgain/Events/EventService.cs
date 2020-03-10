@@ -9,12 +9,12 @@ namespace ShoppingAgain.Events
 {
     public class EventService
     {
-        private readonly EventContext _db;
+    //    private readonly EventContext _db;
         public event EventHandler<ShoppingEvent> ShoppingEvents;
 
         public EventService()
         {
-            _db = new EventContext();
+    //        _db = new EventContext();
         }
 
         public void ListCreated(Guid listId, string Name)
@@ -71,10 +71,10 @@ namespace ShoppingAgain.Events
 
         private void SendEvent(Guid EventSource, ShoppingEvent e)
         {
-            LogEvent(EventSource, JsonConvert.SerializeObject(e));
+     //       LogEvent(EventSource, JsonConvert.SerializeObject(e));
             ShoppingEvents?.Invoke(this, e);
         }
-
+/*
         private State GetState(Guid EventSource)
         {
             return _db.CurrentState.FirstOrDefault(s => s.EventSource == EventSource);
@@ -122,7 +122,7 @@ namespace ShoppingAgain.Events
             _db.EventLog.Add(e);
             _db.SaveChanges();
         }
-
+        */
     }
 
     public abstract class ShoppingEvent

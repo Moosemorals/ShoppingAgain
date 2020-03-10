@@ -43,32 +43,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\data\words.txt">
+    <Content Update="wwwroot\static\images\basket.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\images\basket.svg">
+    <Content Update="wwwroot\static\images\bought.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\images\bought.svg">
+    <Content Update="wwwroot\static\images\icon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\images\icon.svg">
+    <Content Update="wwwroot\static\images\icon_notification.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\images\icon_notification.svg">
+    <Content Update="wwwroot\static\images\lock.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\images\lock.svg">
+    <Content Update="wwwroot\static\images\wanted.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="wwwroot\images\wanted.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\scripts\" />
-    <Folder Include="wwwroot\styles\" />
   </ItemGroup>
 
   <ItemGroup>

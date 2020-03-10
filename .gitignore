@@ -347,3 +347,4 @@ healthchecksdb
 /ShoppingAgain/wwwroot/styles
 /ShoppingAgain/wwwroot/static
 *.sqlite
+/ShoppingAgain/secrets.json

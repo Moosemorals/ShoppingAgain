@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ShoppingAgain.Classes;
 using ShoppingAgain.Models;
 using System;
@@ -16,12 +17,22 @@ namespace ShoppingAgain.Database
         public DbSet<UserList> UserLists { get; set; }
         public DbSet<UserFriend> UserFriends { get; set; }
         public DbSet<Password> Passwords { get; set; }
+        public DbSet<Option> Options { get; set; }
+
+
+        private readonly IConfiguration conf;
+        public ShoppingContext() : base()
+        {
+            conf = new ConfigurationBuilder()
+                .AddJsonFile("secrets.json", false, false)
+                .Build();
+        } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             SqliteConnectionStringBuilder connectionStringBuilder = new SqliteConnectionStringBuilder
             {
-                DataSource = "shopping.sqlite",
+                DataSource = conf[Names.DatabasePath],
             };
 
             optionsBuilder.UseSqlite(new SqliteConnection(connectionStringBuilder.ToString()));
@@ -29,59 +40,28 @@ namespace ShoppingAgain.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            ShoppingList list = new ShoppingList
-            {
-                ID = Guid.NewGuid(),
-                Name = "Shopping",
-            };
 
-            Item item = new Item
-            {
-                Name = "Potatoes",
-                State = ItemState.Wanted,
-            };
-
-            Role UserRole = new Role { ID = Guid.NewGuid(), Name = Names.RoleUser };
-            Role AdminRole = new Role { ID = Guid.NewGuid(), Name = Names.RoleAdmin };
-            User demoUser = new User
-            {
-                ID = Guid.NewGuid(),
-                Name = "Demo",
-                CurrentListID = list.ID,
-            };
-            Password password = Password.Generate("demo");
-            password.ID = Guid.NewGuid();
-            password.UserID = demoUser.ID;
-
-            UserRole ur1 = new UserRole()
-            {
-                RoleId = UserRole.ID,
-                UserId = demoUser.ID,
-            };
-            UserRole ur2 = new UserRole()
-            {
-                RoleId = AdminRole.ID,
-                UserId = demoUser.ID,
-            };
+            modelBuilder.Entity<Option>()
+                .ToTable("Options");
 
             modelBuilder.Entity<ShoppingList>()
-                .ToTable("ShoppingLists")
-                .HasData(list);
+                .ToTable("ShoppingLists");
 
             modelBuilder.Entity<Item>()
                 .ToTable("Items");
 
             modelBuilder.Entity<Password>()
-                .ToTable("Password")
-                .HasData(password);
+                .ToTable("Password");
 
             modelBuilder.Entity<User>()
-                .ToTable("Users")
-                .HasData(demoUser);
+                .ToTable("Users");
 
             modelBuilder.Entity<Role>()
                 .ToTable("Roles")
-                .HasData(UserRole, AdminRole);
+                .HasData(
+                    new Role {ID = Guid.NewGuid(), Name = Names.RoleAdmin }, 
+                    new Role {ID = Guid.NewGuid(), Name = Names.RoleUser }
+                );
 
             modelBuilder.Entity<UserFriend>()
                 .ToTable("UserFriends");
@@ -90,43 +70,40 @@ namespace ShoppingAgain.Database
                 .HasOne(uf => uf.User)
                 .WithMany(u => u.Friends)
                 .HasForeignKey(uf => uf.UserID)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserFriend>()
                 .HasOne(uf => uf.Friend)
                 .WithMany(u => u.FriendBack)
                 .HasForeignKey(uf => uf.FriendID)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserRole>()
-                .ToTable("UserRoles")
-                .HasData(ur1, ur2);
+                .ToTable("UserRoles");
             modelBuilder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.User)
                 .WithMany(u => u.Roles)
                 .HasForeignKey(ur => ur.UserId)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserRole>()
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.Users)
                 .HasForeignKey(ur => ur.RoleId)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<UserList>()
-                .ToTable("UserLists")
-                .HasData(new UserList { UserId = demoUser.ID, ListId = list.ID });
+                .ToTable("UserLists");
             modelBuilder.Entity<UserList>().HasKey(ul => new { ul.UserId, ul.ListId });
             modelBuilder.Entity<UserList>()
                 .HasOne(ul => ul.User)
                 .WithMany(u => u.Lists)
                 .HasForeignKey(ul => ul.UserId)
-                 .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<UserList>()
                 .HasOne(ul => ul.List)
                 .WithMany(l => l.Users)
                 .HasForeignKey(ul => ul.ListId)
-                 .OnDelete(DeleteBehavior.Restrict);
-
+                .OnDelete(DeleteBehavior.Restrict); 
         }
     }
 }

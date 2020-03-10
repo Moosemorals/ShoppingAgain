@@ -18,8 +18,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@_title</title>
-    <link rel="icon" type="image/svg" href="~/images/icon.svg" />
-    <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" />
+    <link rel="icon" type="image/svg" href="~/static/images/icon.svg" />
+    <link rel="stylesheet" type="text/css" href="~/static/shopping.min.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -53,7 +53,9 @@
             </ul>
         </aside>
         @RenderSection("scripts", false)
-        <script defer type="module" src="~/static/shopping.min.js"></script>
+        <!--
+        <script defer type="module" src="~/static/shopping.min.js" asp-append-version="true"></script>
+        -->
     }
 </body>
 </html>

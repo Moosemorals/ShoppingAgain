@@ -1,4 +1,6 @@
+using System;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,11 +30,12 @@ namespace ShoppingAgain
             Configuration = configuration;
             this.Env = env;
 
-            using var shopingDB = new ShoppingContext();
-            shopingDB.Database.EnsureCreated();
+            using var shoppingDB = new ShoppingContext();
+            shoppingDB.Database.EnsureCreated();
 
-            using var eventsDB = new EventContext();
-            eventsDB.Database.EnsureCreated();
+            //    using var eventsDB = new EventContext();
+            //   eventsDB.Database.EnsureCreated();
+
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -73,8 +76,8 @@ namespace ShoppingAgain
 
             // Setup Database
             services.AddEntityFrameworkSqlite()
-                .AddDbContext<ShoppingContext>()
-                .AddDbContext<EventContext>();
+                .AddDbContext<ShoppingContext>();
+            //.AddDbContext<EventContext>();
         }
 
         private string BuildNonce(int chars)
@@ -86,7 +89,11 @@ namespace ShoppingAgain
         }
 
         public void Configure(IApplicationBuilder app)
-        {
+        { 
+            using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            { 
+                Task.Run(async () => await scope.ServiceProvider.GetService<ShoppingService>().Seed()).Wait(); 
+            }
 
             if (Env.IsDevelopment())
             {
@@ -99,10 +106,25 @@ namespace ShoppingAgain
             // Add CSP header
             app.Use(async (ctx, next) =>
             {
+                // CSP including nonce for inline scripts
                 string n = BuildNonce(12);
                 ctx.Items.Add("script-nonce", n);
                 ctx.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; script-src 'self' 'nonce-" + n + "';");
                 await next();
+
+                // Caching for static files
+                if (ctx.Request.Path.StartsWithSegments(new PathString("/static")))
+                {
+                    ctx.Response.GetTypedHeaders().CacheControl =
+                        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                        {
+                            Public = true,
+                            MaxAge = TimeSpan.FromDays(14),
+                        };
+                    ctx.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+                        new string[] { "Accept-Encoding", "Cookie" };
+                }
+
             });
 
             app.UseMiddleware<ListsMiddleware>();

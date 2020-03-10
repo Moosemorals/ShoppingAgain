@@ -43,9 +43,9 @@ namespace ShoppingAgain.TagHelpers
         {
             string src = S switch
             {
-                ItemState.Basket => "~/images/basket.svg",
-                ItemState.Bought => "~/images/bought.svg",
-                ItemState.Wanted => "~/images/wanted.svg",
+                ItemState.Basket => "~/static/images/basket.svg",
+                ItemState.Bought => "~/static/images/bought.svg",
+                ItemState.Wanted => "~/static/images/wanted.svg",
                 _ => "",
             };
             string svg = File.ReadAllText(ServerPath(src));
